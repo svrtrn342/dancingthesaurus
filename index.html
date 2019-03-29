@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="theme-color" content="#2196F3">
+    <title>Dancing Thesaurus</title>
+
+    <!-- CSS  -->
+	<link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="min/plugin-min.css" type="text/css" rel="stylesheet">
+    <link href="min/custom-min.css" type="text/css" rel="stylesheet" >
+    <link href="css/palette.css" type="text/css" rel="stylesheet" >
+    <link href="css/dance.css" type="text/css" rel="stylesheet" >
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	
+
+  <script src="js/bootstrap.min.js"></script>
+
+      <script type="text/javascript" src="js/bootstrap-slider.js"></script>
+	 <link rel="stylesheet" href="css/bootstrap-slider.css">
+
+  
+  <style>
+  td,th,p{
+  padding:0;
+  margin:0;
+  
+  }
+  .slider-selection {
+	background: #1758BB;
+	
+}
+
+
+.slider.slider-horizontal .slider-handle {
+   margin-top:-2px;
+   
+}
+.slider.slider-horizontal .slider-track{
+height:5px;
+
+}
+.motionselection{
+
+margin-top:1em;
+float:left;
+width:22px;
+text-align:center;
+}
+.motionselection img{
+cursor:pointer;width:18px;height:18px;margin:2px;
+
+}
+
+.motionselection .no-display{
+display:none;
+background:white;
+}
+.motionselection .selected-display{
+
+background-color: #c6cacb ;
+}
+
+.motionselection .selected-display:hover,.motionselection .no-display:hover{
+background-color: #718ddf ;
+}
+  
+  </style>
+  
+
+  
+  <style>
+  
+    @media screen and (min-width: 300px) {
+	
+	  .first-slider{margin-bottom:30px;}
+ .keywordinput .col-md-3{
+
+ float:left;
+ width:50%;
+ }
+ 
+ .toolcontainer{
+
+ }
+    .toolcontainer .col-md-2{
+ width:16%;
+ float:left;;
+
+
+ }
+ 
+    .toolcontainer .col-md-8{
+ width:60%;
+ float:left;
+
+
+
+ }
+ 
+   .toolcontainer .col-md-8 a{
+   margin-left:10%;
+
+   };
+ 
+
+ 
+}
+  
+  @media screen and (min-width: 600px) {
+ .keywordinput .col-md-3{
+ float:left;
+ width:25%;
+ }
+ 
+ 
+
+ 
+}
+
+
+
+
+
+  
+  </style>
+  
+  
+</head>
+
+
+
+<body id="top" class="scrollspy">
+
+<!-- Pre Loader -->
+<div id="loader-wrapper">
+    <div id="loader"></div>
+ 
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+ 
+</div>
+
+
+
+
+<!--Navigation-->
+ <div class="navbar-fixed" style= " margin-bottom: 0 !important; background-color: #000000 !important;">
+    <nav id="nav_f" class="default_color" role="navigation">
+        <div class="container" style=" margin-bottom: 0 !important;">
+            <div class="nav-wrapper" style=" margin-bottom: 0 !important;">
+           
+                <ul class="left hide-on-med-and-down">
+		    <li><a href="#dance">Start a Dance!</a></li>
+                    <li><a href="#howitworks">How it works</a></li>
+                    <li><a href="#links">Other Inspiring Websites</a></li>
+                    <li><a href="#team">Team</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                   
+                </ul>
+                <ul id="nav-mobile" class="side-nav">
+ 		    <li><a href="#dance">Start a Dance!</a></li>
+                    <li><a href="#howitworks">How it works</a></li>
+                    <li><a href="#links">Links</a></li>
+                    <li><a href="#team">Team</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    
+                </ul>
+            <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+            </div>
+        </div>
+    </nav>
+</div>
+
+
+
+
+
+<!--Where The Real Action Will Happen-->
+
+<div class="section scrollspy" id="dance"  style=" margin-top: 0 !important;">
+<div class="section no-pad-bot" id="index-banner"  style="margin-top: 0 !important;">
+    <div class="container" style="height: 450px;">
+
+        <h2 class="text_h center header cd-headline letters type" id="prompt">
+            <span></span> 
+            <span class="cd-words-wrapper waiting">
+                <b class="is-visible">Just type in keywords...</b>
+                <b>Get some inspiration!</b>
+                <b>Watch synonyms dance!</b>
+            </span>
+        </h2>
+        <div id="dance-floor" style="margin 0 auto;height:inherit"></div>
+    </div>
+
+	
+
+<div class="section no-pad-bot" id="word-entry">
+<div class="container">
+<div class="row keywordinput">
+<div class="col-md-3"><input id="word1" type="text" style="width:60%;float:left" class="inputkeyword" name="word1" id="word1" placeholder="Keyword 1" />
+
+<div class="motionselection">
+<div class="selected-display" data-pattern="1">
+<img src="img/dancing/infinity.svg"   />
+</div>
+<div class="no-display" data-pattern="2">
+<img src="img/dancing/movement.svg"   />
+</div>
+<div class="no-display" data-pattern="3">
+<img src="img/dancing/ZigZagAcross.svg"  />
+</div>
+</div>
+
+</div>
+<div class="col-md-3"><input id="word2" type="text" style="width:60%;float:left" class="inputkeyword" name="word2" id="word2" placeholder="Keyword 2" />
+<div class="motionselection">
+<div class="selected-display" data-pattern="1">
+<img src="img/dancing/infinity.svg"   />
+</div>
+<div class="no-display" data-pattern="2">
+<img src="img/dancing/movement.svg"   />
+</div>
+<div class="no-display" data-pattern="3">
+<img src="img/dancing/ZigZagAcross.svg"  />
+</div>
+</div>
+</div>
+<div class="col-md-3"><input id="word3" type="text" style="width:60%;float:left" class="inputkeyword" name="word3" id="word3" placeholder="Keyword 3" />
+<div class="motionselection">
+<div class="selected-display" data-pattern="1">
+<img src="img/dancing/infinity.svg"   />
+</div>
+<div class="no-display" data-pattern="2">
+<img src="img/dancing/movement.svg"   />
+</div>
+<div class="no-display" data-pattern="3">
+<img src="img/dancing/ZigZagAcross.svg"  />
+</div>
+</div>
+</div>
+<div class="col-md-3"><input id="word4" type="text" style="width:60%;float:left"class="inputkeyword" name="word4" id="word4" placeholder="Keyword 4" />
+<div class="motionselection">
+<div class="selected-display" data-pattern="1">
+<img src="img/dancing/infinity.svg"   />
+</div>
+<div class="no-display" data-pattern="2">
+<img src="img/dancing/movement.svg"   />
+</div>
+<div class="no-display" data-pattern="3">
+<img src="img/dancing/ZigZagAcross.svg"  />
+</div>
+</div>
+</div>
+</div>
+
+
+</div>
+
+</div>	
+
+
+
+<div class="container">
+<div class="row">
+<div class="col-md-3 first-slider" style="text-align:center">
+
+
+	<div style="text-align:center">
+
+
+		<span  style="color:white;font-weight:bold">Speed</span>
+	</div>
+
+	<input id="ex23" style="width:100%;height:5px" type="text" data-slider-id='ex25Slider' type="text" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="1"/>
+	
+
+
+
+</div>
+
+<div class="col-md-4">
+
+
+
+<div class="row toolcontainer">
+
+<div class="col-md-2">
+
+<img src="img/dancing/XinCircle.svg" id="closeanimation"  style="margin-top:30px;cursor:pointer;display:none;width:45px;height:45px" />
+</div>
+
+<div class="col-md-8">
+
+<p align="center">
+
+<a class="waves-effect waves-light btn-large dance-btn" style="background-color: #6550c1;width:100px;height:100px;border-radius:50%"><img style="width:70px;height:70px;margin-top: 1.1em;margin-left: -1em;" src="img/dancing/DanceButtonIcon.png" /></a>
+</p>
+</div>
+
+
+<div class="col-md-2">
+
+<img src="img/dancing/Pause.svg" id="pauseplaybutton" class="pausestate"  style="margin-top:30px;cursor:pointer;display:none;width:45px;height:45px" />
+</div>
+
+
+</div>
+
+
+</div>
+
+<div class="col-md-3" style="text-align:center">
+
+
+	<div style="text-align:center">
+
+
+		<span  style="color:white;font-weight:bold">Quantity</span>
+	</div>
+	
+	<input id="ex24" style="width:100%;" type="text" data-slider-id='ex24Slider' type="text" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="10"/>
+	
+
+
+
+</div>
+
+
+
+
+</div>
+	
+
+
+
+
+</div>
+
+</div>
+
+ </div>
+
+ 
+
+<!--How it Works-->
+<div id="howitworks" class="section scrollspy">
+    <div class="container">
+        <div class="row">
+            <div  class="col s12">
+                <h2 class="center header text_h2"> Just enter keywords relating to your topic of interest - <span class="span_h2">  </span>then hit the 'Dance' button, sit back, watch...and be inspired! <span class="span_h2"> Easy!</span> </h2>
+            </div>
+
+            <div  class="col s12 m4 l4">
+                <div class="center promo promo-example">
+                    <i class="mdi-image-flash-on"></i>
+                    <h5 class="promo-caption">Arrive at epiphanies faster!</h5>
+                    <p class="light center"> Dancing Thesaurus takes all the work out of brainstorming, coming up with names, exploring themes or even writing poetry. </p>
+                </div>
+            </div>
+            <div class="col s12 m4 l4">
+                <div class="center promo promo-example">
+                    <i class="mdi-social-group"></i>
+                    <h5 class="promo-caption">Impress anyone who might be standing behind you!</h5>
+                    <p class="light center">Not exactly sure what I could put here - some social media bolloxology maybe.</p>
+                </div>
+            </div>
+            <div class="col s12 m4 l4">
+                <div class="center promo promo-example">
+                    <i class="mdi-hardware-desktop-windows"></i>
+                    <h5 class="promo-caption">Works on all devices</h5>
+                    <p class="light center">Dancing Thesaurus is a responsive website optimized for use on mobile devices - in case you need inspiration on the go...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Links to Other Inspiring websites-->
+<div class="section scrollspy" id="links">
+    <div class="container">
+        <h2 class="header text_b">Links to Other Inspiring Websites</h2>
+        <div class="row">
+            <div class="col s12 m4 l4">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img class="activator" src="img/project1.jpg">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">Some Cool Website<i class="mdi-navigation-more-vert right"></i></span>
+                        <p><a href="#">Website link</a></p>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">Some Cool Website <i class="mdi-navigation-close right"></i></span>
+                        <p>Here is some more information about what the website is that is only revealed once clicked on.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4 l4">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img class="activator" src="img/project2.jpeg">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">Some other cool website <i class="mdi-navigation-more-vert right"></i></span>
+                        <p><a href="#">Website link</a></p>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">Project Title <i class="mdi-navigation-close right"></i></span>
+                        <p>Here is some more information about what the website is that is only revealed once clicked on.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4 l4">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img class="activator" src="img/project3.png">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">Some other great site<i class="mdi-navigation-more-vert right"></i></span>
+                        <p><a href="#">Website link</a></p>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">Project Title <i class="mdi-navigation-close right"></i></span>
+                        <p>Here is some more information about what the website is that is only revealed once clicked on.</p>
+                    </div>
+                </div>
+            </div>
+          
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Parallax-->
+<div class="parallax-container">
+    <div class="parallax"><img src="img/parallax1.png"></div>
+</div>
+
+<!--Team-->
+<div class="section scrollspy" id="team">
+    <div class="container">
+        <h2 class="header text_b"> The Dancing Thesaurus Team </h2>
+        <div class="row">
+            <div class="col s12 m3">
+                <div class="card card-avatar">
+                    <div class="waves-effect waves-block waves-light">
+                        <img class="activator" src="img/avatar1.png">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">Contributor 1 <br/>
+                            <small><em><a class="red-text text-darken-1" href="#">Notion Man</a></em></small></span>
+                        <p>
+                            <a class="blue-text text-lighten-2" href="https://www.facebook.com">
+                                <i class="fa fa-facebook-square"></i>
+                            </a>
+                            <a class="blue-text text-lighten-2" href="https://twitter.com">
+                                <i class="fa fa-twitter-square"></i>
+                            </a>
+                            <a class="blue-text text-lighten-2" href="https://plus.google.com">
+                                <i class="fa fa-google-plus-square"></i>
+                            </a>
+                            <a class="blue-text text-lighten-2" href="https://www.linkedin.com">
+                                <i class="fa fa-linkedin-square"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m3">
+                <div class="card card-avatar">
+                    <div class="waves-effect waves-block waves-light">
+                        <img class="activator" src="img/avatar3.png">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">Contributor 2<br/>
+                            <small><em><a class="red-text text-darken-1" href="#">Graphics Hero</a></em></small>
+                        </span>
+                        <p>
+                            <a class="blue-text text-lighten-2" href="https://www.facebook.com">
+                                <i class="fa fa-facebook-square"></i>
+                            </a>
+                            <a class="blue-text text-lighten-2" href="https://twitter.com">
+                                <i class="fa fa-twitter-square"></i>
+                            </a>
+                            <a class="blue-text text-lighten-2" href="https://plus.google.com">
+                                <i class="fa fa-google-plus-square"></i>
+                            </a>
+                            <a class="blue-text text-lighten-2" href="https://www.linkedin.com">
+                                <i class="fa fa-linkedin-square"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m3">
+                <div class="card card-avatar">
+                    <div class="waves-effect waves-block waves-light">
+                        <img class="activator" src="img/avatar4.png">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">
+                            Contributor 3 <br/>
+                            <small><em><a class="red-text text-darken-1" href="#">API Boy</a></em></small></span>
+                        <p>
+                            <a class="blue-text text-lighten-2" href="https://www.facebook.com">
+                                <i class="fa fa-facebook-square"></i>
+                            </a>
+                            <a class="blue-text text-lighten-2" href="https://twitter.com">
+                                <i class="fa fa-twitter-square"></i>
+                            </a>
+                            <a class="blue-text text-lighten-2" href="https://plus.google.com">
+                                <i class="fa fa-google-plus-square"></i>
+                            </a>
+                            <a class="blue-text text-lighten-2" href="https://www.linkedin.com">
+                                <i class="fa fa-linkedin-square"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<!--Footer-->
+<footer id="contact" class="page-footer default_color scrollspy">
+    <div class="container">  
+        <div class="row">
+            <div class="col l6 s12">
+                <form class="col s12" action="contact.php" method="post">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <i class="mdi-action-account-circle prefix white-text"></i>
+                            <input id="icon_prefix" name="name" type="text" class="validate white-text">
+                            <label for="icon_prefix" class="white-text">First Name</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <i class="mdi-communication-email prefix white-text"></i>
+                            <input id="icon_email" name="email" type="email" class="validate white-text">
+                            <label for="icon_email" class="white-text">Email-id</label>
+                        </div>
+                        <div class="input-field col s12">
+                            <i class="mdi-editor-mode-edit prefix white-text"></i>
+                            <textarea id="icon_prefix2" name="message" class="materialize-textarea white-text"></textarea>
+                            <label for="icon_prefix2" class="white-text">Message</label>
+                        </div>
+                        <div class="col offset-s7 s5">
+                            <button class="btn waves-effect waves-light red darken-1" type="submit">Submit
+                                <i class="mdi-content-send right white-text"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col l3 s12">
+                <h5 class="white-text">DancingThesaurs.com</h5>
+                <ul>
+                    <li><a class="white-text" href="http://www.dancingthesaurus.com/">Home</a></li>
+                    <li><a class="white-text" href="http://www.blogger.com</a></li>
+                </ul>
+            </div>
+            <div class="col l3 s12">
+                <h5 class="white-text">Social</h5>
+                <ul>
+                    <li>
+                        <a class="white-text" href="https://www.google.com">
+                            <i class="small fa fa-google-square white-text"></i> Google+
+                        </a>
+                    </li>
+                    <li>
+                        <a class="white-text" href="https://www.facebook.com">
+                            <i class="small fa fa-facebook-square white-text"></i> Facebook
+                        </a>
+                    </li>
+                    <li>
+                        <a class="white-text" href="https://github.com/morganthunder">
+                            <i class="small fa fa-github-square white-text"></i> Github
+                        </a>
+                    </li>
+                    <li>
+                        <a class="white-text" href="https://www.linkedin.com">
+                            <i class="small fa fa-linkedin-square white-text"></i> Linkedin
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copyright default_color">
+        <div class="container">
+            Made by <a class="white-text" href="http://faecbook.com">Some Team Name</a>. Thanks to <a class="white-text" href="http://materializecss.com/">materializecss</a>
+        </div>
+    </div>
+</footer>
+
+
+    <!--  Scripts-->
+  <!--  <script src="min/plugin-min.js"></script>-->
+    <script src="min/custom-min.js"></script>
+    <script src="js/dance.js"></script>
+	
+	
+	<script>
+
+
+
+$(document).ready(function(){
+
+
+
+
+
+$('#ex23').slider({
+	formatter: function(value) {
+		return value ;
+		
+	}
+	
+}).on("slide", function(slideEvt) {
+	
+				if(slideEvt.value>=100){
+
+				speed=100;
+				//jQuery("#speed").val(1);
+
+			}else{
+speed=slideEvt.value/2;
+
+			//jQuery("#speed").val(slideEvt.value);
+
+			}
+			if(!isPaused){
+			clearInterval(timerthread);
+timerthread=setInterval(dance, 50/speed);
+	}
+	
+});
+
+$('#ex24').slider({
+	formatter: function(value) {
+		return value ;
+		
+	}
+	
+}).on("slide", function(slideEvt) {
+	
+				if(slideEvt.value<=1){
+maxwordcounts=1;
+				//jQuery("#speed").val(1);
+
+			}else{
+maxwordcounts=slideEvt.value;
+			//jQuery("#speed").val(slideEvt.value);
+
+			}
+			
+
+	
+	
+});
+
+
+$(".motionselection .selected-display").click(function(){
+$(this).parent().find(".no-display").toggle(0);
+
+
+});
+
+$(".motionselection .no-display").click(function(){
+$(this).parent().find(".selected-display").addClass("no-display");
+$(this).parent().find(".selected-display").removeClass("selected-display");
+$(this).removeClass("no-display");
+$(this).addClass("selected-display");
+$(this).parent().find(".no-display").hide();
+});
+
+
+});
+
+</script>
+	
+	
+	<script>
+	jQuery(document).ready(function(){
+	
+
+
+  
+
+  
+  });
+  
+	</script>
+
+    </body>
+</html>
