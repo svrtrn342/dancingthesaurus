@@ -1,408 +1,554 @@
-nextId = 0
-wordData = [];
-globalData = {}
-dancing = false;
-var isPaused=false;
-var timerthread;
-var speed=.5;
-var maxwordcounts=10;
-var maxexecutioncycles=10;
-var newwordseconds=[3,0];
-var synonyms=[];
 
-	   var  xlim;
-		var ylim;
-
-		var xunit=1;
-	var yunit=1;
-var singletest=true;
-
-//you can pretend this is the size of the dance floor when doing stuff with words, it will be scaled automatically
-//thus the website will work with different sized windows/devices
-floorWidth = 100;
-floorHeight = 100;
-var universalunit=100;
-//the height the dance floor actually is
-floorScreenHeight = 450;
-
-
-
-function firstDance(elements, data) {
-    data.testWordNumber = 0;
-}
-
-function danceStart(elements, data) {
- //   data.newWordTimerMax = 30 * 2/speed;
- //   data.newWordTimer = data.newWordTimerMax;
-}
-
-function danceUpdate(elements, data) {
-	
-
-   
-//if(data.testWordNumber<maxwordcounts){
-  // if (data.newWordTimer <= 0) {
-	   
-//var rand=Math.floor(Math.random()*50);
-if(newwordseconds[1]<=0){
-newwordseconds[1]=newwordseconds[0];
-
-	   
-	   
-        //create a new word every 6 seconds
-		var choosekeywordtype=Math.floor(Math.random()*synonyms.length);
-	
-		
-		var choosesynonym=synonyms[choosekeywordtype]["words"][Math.floor(Math.random()*synonyms[choosekeywordtype]["words"].length)];
-	
-		newWord({"text":choosesynonym,"dancepattern":synonyms[choosekeywordtype]["pattern"]});
-		
-      //  data.testWordNumber++;
-		
-      //  data.newWordTimer = data.newWordTimerMax;
-}
-   // }
-   // data.newWordTimer--;
-//}
-
-}
-
-function wordCreate(id,tilename,dancepattern, data, pos, width, height) {
-
- /*   data.vspeed = 0;
-    data.hspeed = 1;
-	
-	data.id=id;
-	data.tilename=tilename;
-	data.dancepattern=dancepattern;
-	*/
-    //start in a random position
-    pos.x = Math.random() * (floorWidth - width);
-    pos.y = Math.random() * (floorHeight - height);
-		data.push({"id":id,"vspeed":0,"hspeed":1,"tilename":tilename,"dancepattern":dancepattern,"current_position":null,"journey_index":[0,0],"tile_direction":[0,0],"tile_width":0,"tile_height":0,"previous_position":null,"current_position":null,"next_position":null,"distance_from_center":0});
-	
-}
-
-function P3Motion(elements, id, data, pos, width, height, floorWidth, floorHeight) {
- //   data.vspeed += 0.1;
-//	data.hspeed+=0.1;
-
-data["tile_width"]=width;
-data["tile_height"]=height;
-
-
-////////////////////new code starts//////////////////////////
-
-	//data["current_position"]=pos;
-	
-			if(data["previous_position"]==null){
-
-		data["previous_position"]=[0,universalunit];
-	
-		data["current_position"]=data["previous_position"];
-		data["tile_direction"]=[1,1];
-        data["journey_index"][1]=0;
-		
-	
-		}else{
+			var elements = [];
+			var bodies = [];
+			var properties = [];
+			var world;
+			var worldAABB;
+			 var stage = [];
+			 var mouseOnClick = [];
+			var edgeBounce;
+			var iterations = 10;
+			var timeStep = 1000 / 10000; 
+			var constraints;
+			var isMouseDown = false;
+			var mouseJoint;
+			var mouse = { x: 0, y: 0 };
+			var attractorbehavior;
+			var accelerationbehavior;
 			
-					data["previous_position"]=data["current_position"];
-		data["current_position"]=[data["current_position"][0]+(data["tile_direction"][0]*speed),data["current_position"][1]-(speed)];
-			
-			
-			
-		}
-		
-		
-		
-		if((data["current_position"][0]+width+speed>floorWidth) || (data["current_position"][1]-height-speed<0)){
-			//$(".dancing-word[dance-id="+data["id"]+"]").hide();
-			
-			        data["journey_index"][1]++;
-		
-		data["previous_position"]=[Math.abs(data["current_position"][0]),universalunit];
-		data["current_position"]=data["previous_position"];
-		
-	    data["tile_direction"]=[data["tile_direction"][0]*-1,1];
-		if(data["journey_index"][1]>=2){
-			
-			
-		data["journey_index"][0]++;
-		data["previous_position"]=null;
-		data["current_position"]=null;
-			if(data["journey_index"][0]>=maxexecutioncycles){
+			var timerthread;
+			var synonyms=[];
+			var nextid=0;
+			  var renderer;
+			 var step = 0, radius = 200, speed = 0.005;
+              var isPaused=true;
+			  var maxwordcounts=10;
+			  var ismagnet=false;
+$(document).ready(function(){
+ $("#dance-floor").css("width","100%");
+	   $("#dance-floor").css("height",$("#dance-floor").css("width"));
+$("#pausebutton").click(function(){
+world.pause();
+//world.removeBehavior(attractorbehavior);
+
+});
+$("#playbutton").click(function(){
+world.unpause();
+
+});
+
+
+
+		document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+				document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+				document.addEventListener( 'keyup', onDocumentKeyUp, false );
+
+
+				document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+				document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+				document.addEventListener( 'touchend', onDocumentTouchEnd, false );
+
+				window.addEventListener( 'deviceorientation', onWindowDeviceOrientation, false );
+
+
+      window.addEventListener('resize', function() {
+	  $("#dance-floor").css("width","100%");
+	   $("#dance-floor").css("height",$("#dance-floor").css("width"));
+
+
+      }, true);
+
+
+
+
+  
+  
+
 	
-	
-							   		try{
+
+  
+
+  
+  
+  
+  
+ // Physics.util.ticker.subscribe( loop );
 				
-	//	if(wordData.length>=maxwordcounts){
+
+  // start the ticker
+
+
+
+
+});			
+
+function initworld(){
+
+stage=[ 0, 0, $("#dance-floor").width(), $("#dance-floor").height() ];
+worldAABB = Physics.aabb.apply(null, stage);
+	
+	
+	world = Physics({
+					timestep: timeStep,
+					maxIPF: iterations
+				});
+				
+
+  var viewWidth = $("#dance-floor").width();
+  var viewHeight = $("#dance-floor").height();
+
+  
+
+  
+    renderer = Physics.renderer('dom', {
+		            el: document.getElementById('dance-floor'),
+		            width: viewWidth,
+		            height: viewHeight,
+		        });
+				
+
+  world.add( renderer );
+
+
+  edgeBounce=
+  
+  Physics.behavior('edge-collision-detection', {
+      aabb: worldAABB,
+      restitution: .99,
+      cof: .5
+  })
+  
+  
+  world.add(edgeBounce);
+  
+world.add( Physics.behavior('body-collision-detection', { checkAll: false }) );
+		        world.add( Physics.behavior('sweep-prune') );
+		        world.add( Physics.behavior('body-impulse-response') );
+				    world.add( Physics.behavior('interactive', { el: renderer.el }) );
+
+	  
+	//  world.add(bodies);
+ 
+
+  
+
+  // ensure objects bounce when edge collision is detected
+ world.add( Physics.behavior('constant-acceleration') );
+  //  world.add( Physics.behavior('newtonian') );
+
+ attractorbehavior=Physics.behavior('attractor',{  order: 0,
+    strength: .005}).applyTo(bodies);
+ 
+  world.on({
+    'interact:poke': function (pos) {
+      //  world.wakeUpAll();
+	  	   attractorbehavior=Physics.behavior('attractor',{  order: 0,
+    strength: .005}).applyTo(bodies);
+        attractorbehavior.position({'x':pos.x,'y':pos.y});
+        world.add(attractorbehavior);
+    }
+    , 'interact:move': function (pos) {
+        attractorbehavior.position({'x':pos.x,'y':pos.y});
 		
-		
-		var tempid=data["id"];
-			wordData.splice(wordData.findIndex(function(element){return element["id"] == data["id"];}),1);
+    }
+    , 'interact:release': function () {
+       // this.wakeUpAll();
+        world.remove(attractorbehavior);
+    }
+});
+
+
+  Physics.util.ticker.on(function( time, dt ){
+
+  
+  				if (getBrowserDimensions()){
+					setWalls();
+                 }
 			
+
+				//mouseDrag();
+				world.step( time );
+				
+				// only render if not paused
+	            if ( !world.isPaused() ){
+	                world.render();
+	            }
+  
+     
+  });
+  
+    Physics.util.ticker.start();
+  
+}
+
+  			function create_physics_body(i){
 			
+
+						
+	 var element=document.getElementById("physics-"+i);
+
+					properties[i] = getElementProperties( element );
+console.log(properties[i]);
 			
-			wordData.find(function(element) {return element["id"] == id;})
-		if($(".dancing-word[dance-id="+tempid+"]")){$(".dancing-word[dance-id="+tempid+"]").remove()};
 		
-		//}
-	}catch(ex){}
+	 
 	
-		
-		
-		}
-		
-		}
-	
-        return;
-			
-			
-			
-		}
-		
-		
 
-    
-    //cap the speed to stop things getting crazy
-    //data.hspeed = Math.min(5,Math.max(-5, data.hspeed));
-    //data.vspeed = Math.min(5,Math.max(-5, data.vspeed));
-	//data.current_position=pos;
-		
+	 element.style.position = 'absolute';
+				//	element.style.left = 0;//( - properties[i][2]/2) + 'px'; // will be set by renderer
+				//	element.style.top = 0;//( - properties[i][3]/2) + 'px';
+					
+				//	element.style.left = ( - 10) + 'px'; // will be set by renderer
+				//	element.style.top = ( - 10) + 'px';
+					
+				//	element.style.width = properties[i][2] + 'px';
+					element.addEventListener( 'mousedown', onElementMouseDown, false );
+					element.addEventListener( 'mouseup', onElementMouseUp, false );
+					element.addEventListener( 'click', onElementClick, false );
 
-	
-				if(data["current_position"]!=null){
-
-	
-		 $(".dancing-word[dance-id="+data["id"]+"]").css({"left": Math.abs(data["current_position"][0]*xunit) + "px", "top": Math.abs((universalunit-data["current_position"][1])*yunit) + "px"});
-		
-
-	}
-	
-	
-	
-	//data.vspeed += 0.1;
-	//data.hspeed+=0.1;
+	 
 
 
-/////////////////////new code finishes//////////////////////
+	 
+	 
+	 
+	 		var word= Physics.body('convex-polygon', {
+						x: stage[2]/2,//properties[i][0] + properties[i][2]/2,
+						y:0,// properties[i][1] + properties[i][3]/2,
+						vx:1,
+						vy:1,
+						vertices: [
+							{ x: 0, y: 0 },
+							{ x: properties[i][2], y: 0 },
+							{ x: properties[i][2], y: properties[i][3] },
+							{ x: 0, y: properties[i][3] }
+						]
+					});
+					
 
-    /*
-    //bounce off the sides
-    if (pos.y + height + data.vspeed > floorHeight)
-        data.vspeed = -Math.abs(data.vspeed);
-    
-    if (pos.y + data.vspeed < 0)
-        data.vspeed = Math.abs(data.vspeed);
-    
-    if (pos.x + width + data.hspeed > floorWidth)
-        data.hspeed = -Math.abs(data.hspeed);
-        
-    if (pos.x + data.hspeed < 0)
-        data.hspeed = Math.abs(data.hspeed);
-        
-    pos.x += data.hspeed;
-    pos.y += data.vspeed;
-    
-    //Magnetically repel words from eachother
-    //This shows how to get words to interact with eachother
-    elements.each(function ( index ) {
-        var word = getWordData($(this));
-        if (word.id != id) {
-            var distance = Math.sqrt(Math.pow(word.x + word.width / 2 - pos.x - width / 2, 2) + Math.pow(word.y + word.height / 2 - pos.y - height / 2, 2));
-            var direction = Math.atan2(word.y - pos.y, word.x - pos.x);
-            if (distance < 10) {
-                data.hspeed -= Math.cos(direction) * (10 - distance) / 10;
-                data.vspeed -= Math.sin(direction) * (10 - distance) / 10;
-            }
-        }
-    });
-    
-    //cap the speed to stop things getting crazy
-    //data.hspeed = Math.min(5,Math.max(-5, data.hspeed));
-    //data.vspeed = Math.min(5,Math.max(-5, data.vspeed));
-	data.current_position=pos;*/
+					
+				
+					word.view=element;
+				
+	bodies.push(word);
+					  world.add(word);
+					 
+						
+				
+				
+						
+						
+						
+						
+						
+					
+				  
+				  
 }
 
 
-function P2Motion(elements, id, data, pos, width, height, floorWidth, floorHeight) {
- //   data.vspeed += 0.1;
-//	data.hspeed+=0.1;
+            function onDocumentMouseDown( event ) {
 
-data["tile_width"]=width;
-data["tile_height"]=height;
+				isMouseDown = true;
 
+			}
 
-////////////////////new code starts//////////////////////////
+			function onDocumentMouseUp( event ) {
 
-	//data["current_position"]=pos;
-	
-			if(data["previous_position"]==null){
+				isMouseDown = false;
 
-		
-		
-		
-			data["previous_position"]=[50,universalunit];
-		data["current_position"]=data["previous_position"];
-		data["tile_direction"]=[-1,1];
-        data["journey_index"][1]=0;
-		
-		
-		
-	
-		}else{
+			}
 			
-			//		data["previous_position"]=data["current_position"];
-		//data["current_position"]=[data["current_position"][0]+(data["tile_direction"][0]*speed),data["current_position"][1]-(speed)];
+			function onDocumentMouseMove( event ) {
 
-		}
-		
-		
-			if(data["journey_index"][1]==0){
-			localspeedx=speed;
-		localspeedy=(universalunit-88)*speed/(universalunit-50);
-		}else if(data["journey_index"][1]==1){
-			localspeedx=speed;
-		localspeedy=(88-50-data["tile_height"]/2)*speed/(universalunit);
-		
-		}else if(data["journey_index"][1]==2){
-			localspeedx=speed;
-		localspeedy=(50-12-data["tile_height"]/2)*speed/(universalunit);
-		
-		}else if(data["journey_index"][1]==3){
-			localspeedx=speed;
-		localspeedy=(12-0-data["tile_height"]/2)*speed/(universalunit);
-		
-		}
-		
-		
-			data["previous_position"]=data["current_position"];
-		data["current_position"]=[data["current_position"][0]+(data["tile_direction"][0]*localspeedx),data["current_position"][1]-(localspeedy)];
-		
-		
-		
-		
-		
-		
-	
-		
-		
-		
-if((data["current_position"][0]+width+localspeedx>floorWidth) || (data["current_position"][0]<0) || (data["current_position"][1]-height-localspeedy<0)){
-		
-		console.log("changing direction");
-			console.log(data["current_position"]);
-		
-		
-		     data["journey_index"][1]++;
-	    data["tile_direction"]=[data["tile_direction"][0]*-1,1];
-		if(data["journey_index"][1]>=4){
-		data["journey_index"][0]++;
-		data["previous_position"]=null;
-		data["current_position"]=null;
-		
-			if(data["journey_index"][0]>=maxexecutioncycles){
-		
-		//tileArray[i]["wordArray"].splice(j,1);
-		//$(thisid).remove();
-		
-								   		try{
-	
-		var tempid=data["id"];
-			wordData.splice(wordData.findIndex(function(element){return element["id"] == data["id"];}),1);
-			
-			
-			
-			wordData.find(function(element) {return element["id"] == id;})
-		if($(".dancing-word[dance-id="+tempid+"]")){$(".dancing-word[dance-id="+tempid+"]").remove()};
-		
-		//}
-	}catch(ex){}
-		
-		
-		
-		}
-		
-		
-		
-		}
-        return;
-			
-			
-			
-		}
-		
+				
 
-	
-	if(data["current_position"]!=null){
+				mouse.x = event.clientX;
+				mouse.y = event.clientY;
 
-	
-		  $(".dancing-word[dance-id="+data["id"]+"]").css({"left": Math.abs((data["current_position"][0])*xunit) + "px", "top": Math.abs((universalunit-data["current_position"][1])*yunit) + "px"});
-		
-		
+			}
+			function onDocumentKeyUp( event ) {
 
+				if ( event.keyCode == 13 ) search();
+
+			}
+
+			function onDocumentTouchStart( event ) {
+
+				if ( event.touches.length == 1 ) {
+
+				
+					mouse.x = event.touches[0].pageX;
+					mouse.y = event.touches[0].pageY;
+					isMouseDown = true;
+				}
+			}
+
+			function onDocumentTouchMove( event ) {
+
+				if ( event.touches.length == 1 ) {
+
+					event.preventDefault();
+
+					mouse.x = event.touches[0].pageX;
+					mouse.y = event.touches[0].pageY;
+
+				}
+
+			}
+
+			function onDocumentTouchEnd( event ) {
+
+				if ( event.touches.length == 0 ) {
+
+					isMouseDown = false;
+				}
+
+			}
+
+			function onWindowDeviceOrientation( event ) {
+
+			
+
+			}
+			
+            	function mouseDrag() {
+
+				// mouse press
+				if (isMouseDown && !mouseJoint) {
+  
+					var body = getBodyAtMouse();
+
+					if (body) {
+
+						var md = Physics.body('point', {
+							x: mouse.x,
+							y: mouse.y
+						});
+						mouseJoint = constraints.distanceConstraint(md, body, 0.2);
+					}
+				}
+
+				// mouse release
+				if (!isMouseDown) {
+
+					if (mouseJoint) {
+
+						constraints.remove( mouseJoint );
+						mouseJoint = null;
+					}
+				}
+
+				// mouse move
+				if (mouseJoint) {
+
+					mouseJoint.bodyA.state.pos.set(mouse.x, mouse.y);
+				}
+			}
+
+			function getBodyAtMouse() {
+
+				return world.findOne({ $at: Physics.vector(mouse.x, mouse.y) });
+			}
+
+            function setWalls() {
+
+				worldAABB = Physics.aabb.apply(null, stage);
+            	edgeBounce.setAABB( worldAABB );
+
+			}
+
+			function getElementsByClass( searchClass ) {
+
+				var classElements = [];
+				var els = document.getElementsByTagName('*');
+				var elsLen = els.length
+
+				for (i = 0, j = 0; i < elsLen; i++) {
+
+					var classes = els[i].className.split(' ');
+					for (k = 0; k < classes.length; k++)
+						if ( classes[k] == searchClass )
+							classElements[j++] = els[i];
+				}
+
+				return classElements;
+			}
+
+			function getElementProperties( element ) {
+
+				var x = 0;
+				var y = 0;
+				var width = element.offsetWidth;
+				var height = element.offsetHeight;
+				
+				do {
+					
+					x += element.offsetLeft;
+					y += element.offsetTop;
+
+				} while ( element = element.offsetParent );
+				
+				return [ x, y, width, height ];
+			}
+			
+			
+			
+						function onElementMouseDown( event ) {
+
+				event.preventDefault();
+
+				mouseOnClick[0] = event.clientX;
+				mouseOnClick[1] = event.clientY;
+
+			}
+
+			function onElementMouseUp( event ) {
+
+				event.preventDefault();
+
+			}
+
+			function onElementClick( event ) {
+
+				var range = 5;
+
+				if ( mouseOnClick[0] > event.clientX + range || mouseOnClick[0] < event.clientX - range &&
+				     mouseOnClick[1] > event.clientY + range || mouseOnClick[1] < event.clientY - range ) {
+
+					event.preventDefault();
+
+				}
+
+
+			}
+			
+				function getBrowserDimensions() {
+				
+
+
+
+				var changed = false;
+
+				if ( stage[0] != $("#dance-floor").position().left ) {
+
+					// delta[0] = (window.screenX - stage[0]) * 50;
+					stage[0] = 0;//$("#dance-floor").position().left;
+					changed = true;
+				}
+
+				if ( stage[1] != $("#dance-floor").position().top ) {
+
+					// delta[1] = (window.screenY - stage[1]) * 50;
+					stage[1] = 0;//$("#dance-floor").position().top;
+					changed = true;
+				}
+
+				if ( stage[2] != $("#dance-floor").width() ) {
+
+					stage[2] = $("#dance-floor").width();
+					changed = true;
+				}
+
+				if ( stage[3] != $("#dance-floor").height() ) {
+
+					stage[3] = $("#dance-floor").height();
+					changed = true;
+				}
+			
+
+				return changed;
+			}
+			
+			
+			
+$(document).ready(function(){
+
+
+
+
+
+$('#ex23').slider({
+	formatter: function(value) {
+		return value ;
+		
 	}
 	
+}).on("slide", function(slideEvt) {
 	
+				if(slideEvt.value>=100){
+
+				speed=100;
+				//jQuery("#speed").val(1);
+
+			}else{
+speed=slideEvt.value;
+world.timestep(timeStep+(speed/500));
+//world.timestep(timeStep*speed);
+
+			//jQuery("#speed").val(slideEvt.value);
+
+			}
+
+	
+});
+
+$('#ex24').slider({
+	formatter: function(value) {
+		return value ;
+		
+	}
+	
+}).on("slide", function(slideEvt) {
+	
+				if(slideEvt.value<=1){
+maxwordcounts=1;
+				//jQuery("#speed").val(1);
+
+			}else{
+maxwordcounts=slideEvt.value;
+			//jQuery("#speed").val(slideEvt.value);
+
+			}
+			
 
 	
 	
-	
-	//data.vspeed += 0.1;
-	//data.hspeed+=0.1;
+});
 
 
-/////////////////////new code finishes//////////////////////
+$(".motionselection .selected-display").click(function(){
+$(this).parent().find(".no-display").toggle(0);
 
-    /*
-    //bounce off the sides
-    if (pos.y + height + data.vspeed > floorHeight)
-        data.vspeed = -Math.abs(data.vspeed);
-    
-    if (pos.y + data.vspeed < 0)
-        data.vspeed = Math.abs(data.vspeed);
-    
-    if (pos.x + width + data.hspeed > floorWidth)
-        data.hspeed = -Math.abs(data.hspeed);
-        
-    if (pos.x + data.hspeed < 0)
-        data.hspeed = Math.abs(data.hspeed);
-        
-    pos.x += data.hspeed;
-    pos.y += data.vspeed;
-    
-    //Magnetically repel words from eachother
-    //This shows how to get words to interact with eachother
-    elements.each(function ( index ) {
-        var word = getWordData($(this));
-        if (word.id != id) {
-            var distance = Math.sqrt(Math.pow(word.x + word.width / 2 - pos.x - width / 2, 2) + Math.pow(word.y + word.height / 2 - pos.y - height / 2, 2));
-            var direction = Math.atan2(word.y - pos.y, word.x - pos.x);
-            if (distance < 10) {
-                data.hspeed -= Math.cos(direction) * (10 - distance) / 10;
-                data.vspeed -= Math.sin(direction) * (10 - distance) / 10;
-            }
-        }
-    });
-    
-    //cap the speed to stop things getting crazy
-    //data.hspeed = Math.min(5,Math.max(-5, data.hspeed));
-    //data.vspeed = Math.min(5,Math.max(-5, data.vspeed));
-	data.current_position=pos;*/
-}
 
+});
+
+$(".motionselection .no-display").click(function(){
+$(this).parent().find(".selected-display").addClass("no-display");
+$(this).parent().find(".selected-display").removeClass("selected-display");
+$(this).removeClass("no-display");
+$(this).addClass("selected-display");
+$(this).parent().find(".no-display").hide();
+});
+
+
+});
 
 
 $(document).ready(function (){
 	$("#pauseplaybutton").click(function(){
 		
 		if($(this).hasClass("pausestate")){
+		world.pause();
 			isPaused=true;
 			$(this).removeClass("pausestate");
 			$(this).attr("src","img/dancing/Play.svg");
 			$(this).addClass("playstate");
 			
 		}else{
+		world.unpause();
 			isPaused=false;
 			$(this).removeClass("playstate");
 			$(this).attr("src","img/dancing/Pause.svg");
@@ -415,20 +561,22 @@ $(document).ready(function (){
 	$("#closeanimation").click(function(){
 		
 		isPaused=true;
+		world.destroy();
 		
 		clearInterval(timerthread);
-		synonyms=[];
+		
 		//nextId = 0;
         wordData = [];
         globalData = {};
-
+  var maxwordcounts=10;
+			  var ismagnet=false;
             $("#pauseplaybutton").removeClass("playstate");
 			$("#pauseplaybutton").attr("src","img/dancing/Pause.svg");
 			$("#pauseplaybutton").addClass("pausestate");
-			
+			 $(".dance-btn").find("img").attr("src","img/dancing/DanceButtonIcon.png");
 			$("#pauseplaybutton").hide();
 			$(this).hide();
-		
+		synonyms=[];
 		$("#dance-floor").html("").hide();
 		$("#prompt").show();
 		$("#word-entry").show();
@@ -438,7 +586,7 @@ $(document).ready(function (){
 	
     $(".dance-btn").click(function (){
 
-
+var thisbutton=this;
         
 
        
@@ -506,15 +654,15 @@ for(var j=0;j<synonyms.length;j++){
 
  
 		
-		
-		   $("#pauseplaybutton").removeClass("playstate");
-			$("#pauseplaybutton").attr("src","img/dancing/Pause.svg");
-			$("#pauseplaybutton").addClass("pausestate");
-		
+		if(isPaused){
+		 $("#pauseplaybutton").removeClass("playstate");
+	    $("#pauseplaybutton").attr("src","img/dancing/Pause.svg");
+		$("#pauseplaybutton").addClass("pausestate");
+		$(thisbutton).find("img").attr("src","img/dancing/magnetPNG.png");
 		nextId = 0;
 		$("#word1").css("border","");
-		$("#word-entry").hide();
-		clearInterval(timerthread);
+		//$("#word-entry").hide();
+	//	clearInterval(timerthread);
 		isPaused=false;
 		$("#pauseplaybutton").show();
 		$("#closeanimation").show();
@@ -526,33 +674,27 @@ for(var j=0;j<synonyms.length;j++){
        // nextId = 0
         wordData = [];
 		globalData={};
-        $("#dance-floor").html("");
+    
+		initworld();
+		timerthread= setInterval(dance, 4000);
+        }else{
+		if(!ismagnet){
+		   attractorbehavior=Physics.behavior('attractor',{  order: 0,
+    strength: .05}).applyTo(bodies);
+        attractorbehavior.position({'x':stage[2]/2,'y':stage[3]/2});
+        world.add(attractorbehavior);
+		ismagnet=!ismagnet;
+		}else{
+		 world.remove(attractorbehavior);
+		 ismagnet=!ismagnet;
+		}
+		}
 		
 		
-        
-        //add each word entered to the dance floor
-        var i;
-        for (i = 0; i < synonyms.length; i++) {
-         
-		var choosekeywordtype=synonyms[i]["id"];
-		var choosesynonym=synonyms[i]["words"][Math.floor(Math.random()*synonyms[i]["words"].length)];
 		
-		 
-             //   newWord({"text":choosesynonym,"dancepattern":synonyms[i]["pattern"]});
-           
-        }
-	
-        
-        words = $(".dancing-word");
-        
-      //  if (dancing === false)
-            firstDance(words, globalData);
-        
-        danceStart(words, globalData);
-          timerthread= setInterval(dance, 50/speed);
-        //call the dance function 30 times a second
-       // if (dancing === false) {
-        //    dancing = true;
+
+
+
          
        // }
     }).fail(function() {
@@ -560,160 +702,31 @@ for(var j=0;j<synonyms.length;j++){
   });
 		
 });
+
+
+
+
 	
 });
 
-function dance() {
-	
-	if(!isPaused){
-		newwordseconds[1]-=(speed*50/1000);
-			     xlim=100;//100*($("#dance-floor").width())/$("#dance-floor").height() ;
-	ylim=100;
-	xunit=($("#dance-floor").width())/100;
-	 yunit=$("#dance-floor").height()/100;
+function dance(){
+var synonymkind=Math.floor(Math.random()*synonyms.length);
+var choosesynonym=synonyms[synonymkind]["words"][Math.floor(Math.random()*synonyms[synonymkind]["words"].length)];
 
-						   		try{
-				
-	
-		if(wordData.length>maxwordcounts){
-			
-			
-		var tempid=wordData[0]["id"];
+$("#dance-floor").append('<span style="" class="physics-element" id="physics-'+nextid+'">'+choosesynonym+'</span>');
+        
+		var element=document.getElementById("physics-"+nextid);
 		
-			wordData.splice(0,1);
-		if($(".dancing-word[dance-id="+tempid+"]")){$(".dancing-word[dance-id="+tempid+"]").remove()};
+		var offsets = $("#physics-"+nextid).offset();
+var top = offsets.top;
+var left = offsets.left;
+		console.log(offsets);
+		
+		while(bodies.length>maxwordcounts){
+		world.remove(bodies[0]);
+		bodies.splice(0,1);
 		}
-		//}
-	}catch(ex){}
-	
-	 
-		
-		
-    var words = $(".dancing-word");
-    var floorWidthScale = floorWidth / ($(window).width() - $("#dance-floor").position().left * 2);
-    var floorHeightScale = floorHeight / floorScreenHeight;
-    /*
-	if(words.length>maxwordcounts){
-		for(var i=0;i<words.length-maxwordcounts;i++){
-		
-		words[i].remove();
-	}
-	}
-	*/
-	
-	
-    words.each(function ( index ) {
-        //get the coordinates of the word from its css
-        var pos = {};
-        
-        pos.x = Number($(this).attr("dance-x"));
-        pos.y = Number($(this).attr("dance-y"));
-        var width = $(this).width() * floorWidthScale;
-        var height = $(this).height() * floorHeightScale;
-        var id = Number($(this).attr("dance-id"));
-		var dancetext=$(this).attr("dance-text");
-		var dancepattern=$(this).attr("dance-pattern");
-        
-        //wordCreate will be called right before wordUpdate is called for a given word if it hasn't been called yet
-       /* if (wordData[id] === undefined) {
-            wordData[id] = {};
-            wordCreate(words, id,dancetext,dancepattern, wordData[id], pos, width, height);
-           
-        }*/
-		;
-		$(this).show();
-        if(dancepattern==3){
-        P3Motion(words, id, wordData.find(function(element) {return element["id"] == id;}), pos, width, height, floorWidth, floorHeight);
-        }else if(dancepattern==2){
-			
-	    P2Motion(words, id, wordData.find(function(element) {return element["id"] == id;}), pos, width, height, floorWidth, floorHeight);
-   
-			
-		}
-      //  $(this).css({"left": Math.floor(pos.x / floorWidthScale) + "px", "top": Math.floor(pos.y / floorHeightScale) + "px"});
-        $(this).attr("dance-x", pos.x);
-        $(this).attr("dance-y", pos.y);
-    });
-    
-    danceUpdate(words, globalData);
-	
+			 create_physics_body(nextid);
+           nextid++;
 
-	
-
-	
-	}
-}
-
-
-
-
-function newWord(word) {
-	
-	    var floorWidthScale = floorWidth / ($(window).width() - $("#dance-floor").position().left * 2);
-    var floorHeightScale = floorHeight / floorScreenHeight;
-	/*var nextId=wordData.length;
-	wordData.push({"tilename":word,"pattern":3,"tile_synonyms":["hello","how","are","you"],"id":nextId,"status":"0","journey_index":[0,0],"tile_direction":[0,0],"current_string":word,"tile_width":0,"tile_height":0,"previous_position":null,"current_position":null,"next_position":null,"distance_from_center":0});
-	*/
-	var newid=wordData.length;
-	
-	var pos = {};
-	if(word.dancepattern==3){
-		
-		pos.x=0;
-		pos.y=0;
-	}else{
-		pos.x=0;
-		pos.y=0;
-		
-	}
-	
-	
-    $("#dance-floor").append('<span class="dancing-word" dance-x="'+pos.x+'" dance-y="'+pos.y+'" dance-pattern="'+word.dancepattern+'" dance-text="'+word.text+'" dance-id=' + nextId + ' style="display: none;">' + word.text + "</span>");
-	
-	var thisid=$(".dancing-word[dance-id="+nextId+"]");
-
-	    
-        
-        pos.x = Number($(thisid).attr("dance-x"));
-        pos.y = Number($(thisid).attr("dance-y"));
-        var width = $(thisid).width() * floorWidthScale;
-        var height = $(thisid).height() * floorHeightScale;
-        var id = Number($(thisid).attr("dance-id"));
-		var dancetext=$(thisid).attr("dance-text");
-		var dancepattern=$(thisid).attr("dance-pattern");
-  
-        //wordCreate will be called right before wordUpdate is called for a given word if it hasn't been called yet
-       
-	wordCreate( id,dancetext,dancepattern, wordData, pos, width, height);    
-	//$(thisid).show();	
-	 /*  if (wordData[newid] === undefined) {
-            wordData[newid] = {};
-        
-		
-        }
-		*/
-		
-
-		
-
-	
-
-
-
-
-	nextId++;
-}
-
-//get all the relevant data for a given word
-function getWordData(element) {
-    var floorWidthScale = floorWidth / ($(window).width() - $("#dance-floor").position().left * 2);
-    var floorHeightScale = floorHeight / floorScreenHeight;
-    var data = {};
-    data.x = Number(element.attr("dance-x"));
-    data.y = Number(element.attr("dance-y"));
-    data.width = element.width() * floorWidthScale;
-    data.height = element.height() * floorHeightScale;
-    data.id = Number(element.attr("dance-id"));
-    data.data = wordData[data.id];
-    return data;
 }

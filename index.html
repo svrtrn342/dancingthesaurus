@@ -16,6 +16,7 @@
 	
 
   <script src="js/bootstrap.min.js"></script>
+  <script src="physicsjs6/js/physicsjs-full-0.6.0.js"></script>
 
       <script type="text/javascript" src="js/bootstrap-slider.js"></script>
 	 <link rel="stylesheet" href="css/bootstrap-slider.css">
@@ -133,6 +134,7 @@ background-color: #718ddf ;
 
 <body id="top" class="scrollspy">
 
+
 <!-- Pre Loader -->
 <div id="loader-wrapper">
     <div id="loader"></div>
@@ -180,10 +182,12 @@ background-color: #718ddf ;
 <!--Where The Real Action Will Happen-->
 
 <div class="section scrollspy" id="dance"  style=" margin-top: 0 !important;">
-<div class="section no-pad-bot" id="index-banner"  style="margin-top: 0 !important;">
-    <div class="container" style="height: 450px;margin-bottom:20px">
+<div class="section no-pad-bot" id="index-banner"  style="min-height:auto;max-height:none;margin-top: 0 !important;">
+<div class="container" style="width:90%;height: auto;margin-bottom:20px">
+<div class="row">
+<div class="col-sm-8">
 
-        <h2 class="text_h center header cd-headline letters type" id="prompt">
+        <h2 class="text_h center header cd-headline letters type" id="prompt" style="">
             <span></span> 
             <span class="cd-words-wrapper waiting">
                 <b class="is-visible">Just type in keywords...</b>
@@ -191,30 +195,41 @@ background-color: #718ddf ;
                 <b>Watch synonyms dance!</b>
             </span>
         </h2>
-        <div id="dance-floor" style="margin 0 auto;height:inherit;display:none;background:white;"></div>
-    </div>
 
+		        <div id="dance-floor" style="margin 0 auto;width:100%;height:inherit;background:white;display:none">
+
+		</div>
+		
+		
+		
+		
+		
+		
+  
+</div>
 	
-
+<div class="col-sm-4">
 <div class="section no-pad-bot" id="word-entry">
 <div class="container">
 <div class="row keywordinput">
-<div class="col-md-3"><input id="word1" type="text" style="width:60%;float:left" class="inputkeyword" name="word1" id="word1" placeholder="Keyword 1" />
+<div class="col-md-12"><input id="word1" type="text" style="width:60%;float:left" class="inputkeyword" name="word1" id="word1" value="flower" placeholder="Keyword 1" />
+<!--
+<div class="motionselection">
+<div class="selected-display" data-pattern="1">
+<img src="img/dancing/infinity.svg"   />
+</div>
+<div class="no-display" data-pattern="2">
+<img src="img/dancing/movement.svg"   />
+</div>
+<div class="no-display" data-pattern="3">
+<img src="img/dancing/ZigZagAcross.svg"  />
+</div>
 
-<div class="motionselection">
-<div class="selected-display" data-pattern="1">
-<img src="img/dancing/infinity.svg"   />
-</div>
-<div class="no-display" data-pattern="2">
-<img src="img/dancing/movement.svg"   />
-</div>
-<div class="no-display" data-pattern="3">
-<img src="img/dancing/ZigZagAcross.svg"  />
-</div>
-</div>
+</div>-->
 
 </div>
-<div class="col-md-3"><input id="word2" type="text" style="width:60%;float:left" class="inputkeyword" name="word2" id="word2" placeholder="Keyword 2" />
+<div class="col-md-12"><input id="word2" type="text" style="width:60%;float:left" class="inputkeyword" name="word2" id="word2" value="machine" placeholder="Keyword 2" />
+<!--
 <div class="motionselection">
 <div class="selected-display" data-pattern="1">
 <img src="img/dancing/infinity.svg"   />
@@ -225,9 +240,10 @@ background-color: #718ddf ;
 <div class="no-display" data-pattern="3">
 <img src="img/dancing/ZigZagAcross.svg"  />
 </div>
+</div>-->
 </div>
-</div>
-<div class="col-md-3"><input id="word3" type="text" style="width:60%;float:left" class="inputkeyword" name="word3" id="word3" placeholder="Keyword 3" />
+<div class="col-md-12"><input id="word3" type="text" style="width:60%;float:left" class="inputkeyword" name="word3" id="word3" placeholder="Keyword 3" />
+<!--
 <div class="motionselection">
 <div class="selected-display" data-pattern="1">
 <img src="img/dancing/infinity.svg"   />
@@ -238,9 +254,10 @@ background-color: #718ddf ;
 <div class="no-display" data-pattern="3">
 <img src="img/dancing/ZigZagAcross.svg"  />
 </div>
+</div>-->
 </div>
-</div>
-<div class="col-md-3"><input id="word4" type="text" style="width:60%;float:left"class="inputkeyword" name="word4" id="word4" placeholder="Keyword 4" />
+<div class="col-md-12"><input id="word4" type="text" style="width:60%;float:left"class="inputkeyword" name="word4" id="word4" placeholder="Keyword 4" />
+<!--
 <div class="motionselection">
 <div class="selected-display" data-pattern="1">
 <img src="img/dancing/infinity.svg"   />
@@ -251,7 +268,7 @@ background-color: #718ddf ;
 <div class="no-display" data-pattern="3">
 <img src="img/dancing/ZigZagAcross.svg"  />
 </div>
-</div>
+</div>-->
 </div>
 </div>
 
@@ -264,7 +281,7 @@ background-color: #718ddf ;
 
 <div class="container">
 <div class="row">
-<div class="col-md-3 first-slider" style="text-align:center">
+<div class="col-md-12 first-slider" style="text-align:center">
 
 
 	<div style="text-align:center">
@@ -280,7 +297,7 @@ background-color: #718ddf ;
 
 </div>
 
-<div class="col-md-4">
+<div class="col-md-12">
 
 
 
@@ -311,7 +328,7 @@ background-color: #718ddf ;
 
 </div>
 
-<div class="col-md-3" style="text-align:center">
+<div class="col-md-12" style="text-align:center">
 
 
 	<div style="text-align:center">
@@ -331,12 +348,19 @@ background-color: #718ddf ;
 
 
 </div>
-	
+</div>
 
-
+</div>
 
 
 </div>
+
+
+</div>
+
+
+
+
 
 </div>
 
@@ -601,100 +625,10 @@ background-color: #718ddf ;
     <!--  Scripts-->
   <!--  <script src="min/plugin-min.js"></script>-->
     <script src="min/custom-min.js"></script>
-    <script src="js/dance.js"></script>
-	
-	
-	<script>
+   <script src="js/dance.js"></script>
+   
 
 
-
-$(document).ready(function(){
-
-
-
-
-
-$('#ex23').slider({
-	formatter: function(value) {
-		return value ;
-		
-	}
-	
-}).on("slide", function(slideEvt) {
-	
-				if(slideEvt.value>=100){
-
-				speed=100;
-				//jQuery("#speed").val(1);
-
-			}else{
-speed=slideEvt.value/2;
-
-			//jQuery("#speed").val(slideEvt.value);
-
-			}
-			if(!isPaused){
-			clearInterval(timerthread);
-timerthread=setInterval(dance, 50/speed);
-	}
-	
-});
-
-$('#ex24').slider({
-	formatter: function(value) {
-		return value ;
-		
-	}
-	
-}).on("slide", function(slideEvt) {
-	
-				if(slideEvt.value<=1){
-maxwordcounts=1;
-				//jQuery("#speed").val(1);
-
-			}else{
-maxwordcounts=slideEvt.value;
-			//jQuery("#speed").val(slideEvt.value);
-
-			}
-			
-
-	
-	
-});
-
-
-$(".motionselection .selected-display").click(function(){
-$(this).parent().find(".no-display").toggle(0);
-
-
-});
-
-$(".motionselection .no-display").click(function(){
-$(this).parent().find(".selected-display").addClass("no-display");
-$(this).parent().find(".selected-display").removeClass("selected-display");
-$(this).removeClass("no-display");
-$(this).addClass("selected-display");
-$(this).parent().find(".no-display").hide();
-});
-
-
-});
-
-</script>
-	
-	
-	<script>
-	jQuery(document).ready(function(){
-	
-
-
-  
-
-  
-  });
-  
-	</script>
 
     </body>
 </html>
