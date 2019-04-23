@@ -13,23 +13,24 @@
 			var isMouseDown = false;
 			var mouseJoint;
 			var mouse = { x: 0, y: 0 };
-			var attractorbehavior;
-			var accelerationbehavior;
 			
+			var currentsecond=0;
 			var timerthread;
 			var synonyms=[];
 			var nextid=0;
 			  var renderer;
-			 var step = 0, radius = 200, speed = 0.005;
+			 var step = 0, radius = 200, speed = 1;
               var isPaused=true;
 			  var maxwordcounts=10;
-			  var ismagnet=false;
+			  
+			  var createnewword=true;
+			  var attractorbehaviorbodies=[];
 $(document).ready(function(){
  $("#dance-floor").css("width","100%");
 	   $("#dance-floor").css("height",$("#dance-floor").css("width"));
 $("#pausebutton").click(function(){
 world.pause();
-//world.removeBehavior(attractorbehavior);
+
 
 });
 $("#playbutton").click(function(){
@@ -51,13 +52,27 @@ world.unpause();
 				document.addEventListener( 'touchend', onDocumentTouchEnd, false );
 
 				window.addEventListener( 'deviceorientation', onWindowDeviceOrientation, false );
+      window.addEventListener('blur', function() {
 
+	  createnewword=false;
+
+      }, true);
+	  
+	        window.addEventListener('focus', function() {
+
+	  createnewword=true;
+
+      }, true);
+	
+
+				
 
       window.addEventListener('resize', function() {
 	  $("#dance-floor").css("width","100%");
 	   $("#dance-floor").css("height",$("#dance-floor").css("width"));
 
-
+  				
+	   
       }, true);
 
 
@@ -91,7 +106,7 @@ worldAABB = Physics.aabb.apply(null, stage);
 	
 	
 	world = Physics({
-					timestep: timeStep,
+					timestep: timeStep+(speed/500),
 					maxIPF: iterations
 				});
 				
@@ -123,21 +138,22 @@ worldAABB = Physics.aabb.apply(null, stage);
   
   world.add(edgeBounce);
   
-world.add( Physics.behavior('body-collision-detection', { checkAll: false }) );
+world.add( Physics.behavior('body-collision-detection', { checkAll: true }) );
 		        world.add( Physics.behavior('sweep-prune') );
-		        world.add( Physics.behavior('body-impulse-response') );
+		        world.add( Physics.behavior('body-impulse-response'),{mtvThreshold:0,bodyExtractDropoff:0,forceWakeupAboveOverlapThreshold:false} );
 				    world.add( Physics.behavior('interactive', { el: renderer.el }) );
 
 	  
-	//  world.add(bodies);
+//	  world.add(bodies);
  
 
   
 
   // ensure objects bounce when edge collision is detected
- world.add( Physics.behavior('constant-acceleration') );
+// world.add( Physics.behavior('constant-acceleration') );
   //  world.add( Physics.behavior('newtonian') );
 
+  /*
  attractorbehavior=Physics.behavior('attractor',{  order: 0,
     strength: .005}).applyTo(bodies);
  
@@ -158,26 +174,61 @@ world.add( Physics.behavior('body-collision-detection', { checkAll: false }) );
         world.remove(attractorbehavior);
     }
 });
+*/
 
-
-  Physics.util.ticker.on(function( time, dt ){
-
-  
+world.on('step', function(){
+	
+	 
   				if (getBrowserDimensions()){
 					setWalls();
                  }
-			console.log(speed);
-//world.warp(2*speed);
-				//mouseDrag();
-				world.step( time );
-				// world.wakeUpAll();
-				// only render if not paused
-	            if ( !world.isPaused() ){
+    
+			   	if($(".dance-btn").attr("magnet-status")==='true'){
+				
+				
+				
+				magnet_effect();
+				
+			for(var k=0;k<attractorbehaviorbodies.length;k++){
+				
+				world.add(attractorbehaviorbodies[k]);
+			}
+				
+				//attractorbehaviorbodies=[];
+				 
+			 }else{
+				
+			for(var k=0;k<attractorbehaviorbodies.length;k++){
+				
+				world.removeBehavior(attractorbehaviorbodies[k]);
+			}
+				 attractorbehaviorbodies=[];
+				
+				 
+			 }
+	
+	 if ( !world.isPaused() ){
 	                world.render();
 	            }
+				
+				
+	
+	
+  });
+
+  Physics.util.ticker.on(function( time, dt ){
+	  
+	  
+
+
+				world.step( time );
+				
+				// only render if not paused
+	           
   
      
   });
+  
   
     Physics.util.ticker.start();
   
@@ -190,7 +241,7 @@ world.add( Physics.behavior('body-collision-detection', { checkAll: false }) );
 	 var element=document.getElementById("physics-"+i);
 
 					properties[i] = getElementProperties( element );
-console.log(properties[i]);
+
 			
 		
 	 
@@ -213,7 +264,7 @@ console.log(properties[i]);
 
 	 
 	 
-	 
+	 /*
 	 		var word= Physics.body('convex-polygon', {
 						x: stage[2]/2,//properties[i][0] + properties[i][2]/2,
 						y:0,// properties[i][1] + properties[i][3]/2,
@@ -226,6 +277,17 @@ console.log(properties[i]);
 							{ x: 0, y: properties[i][3] }
 						]
 					});
+				*/	
+					
+						var word= Physics.body('rectangle', {
+						x: stage[2]/2,//properties[i][0] + properties[i][2]/2,
+						y:0,// properties[i][1] + properties[i][3]/2,
+						vx:1,
+						vy:1,
+						width: properties[i][2],
+						height: properties[i][3] 
+						
+					});
 					
 
 					
@@ -233,10 +295,10 @@ console.log(properties[i]);
 					word.view=element;
 				
 	bodies.push(word);
+	
 					  world.add(word);
 					 
-						
-				
+
 				
 						
 						
@@ -347,10 +409,72 @@ console.log(properties[i]);
 					mouseJoint.bodyA.state.pos.set(mouse.x, mouse.y);
 				}
 			}
+			
+			
+
+    function magnet_effect(){
+		
+		var xbodies=[];
+		var ybodies=[];
+		
+		
+		
+		var tempbodies=world.getBodies();
+		
+	
+		tempbodies.sort(function(body1,body2){
+			
+			var distance1=Math.sqrt(Math.pow(body1.state.pos["_"][0],2)+Math.pow(body1.state.pos["_"][1],2));
+			var distance2=Math.sqrt(Math.pow(body2.state.pos["_"][0],2)+Math.pow(body2.state.pos["_"][1],2));
+			
+			return distance1-distance2;
+			
+			
+			});
+			
+			console.log("After sorting:");
+		
+			
+		
+		for(var i=tempbodies.length-1;i>=0;i-=2){
+		var body1= tempbodies[i];
+		
+		try{
+		var body2=	getNearestBodyAtMouse(tempbodies[i-1].state.pos["_"][0],tempbodies[i-1].state.pos["_"][1]);
+		if(body2){
+			
+				var attractorbehavior2=Physics.behavior('attractor',{ pos:{'x':body1.state.pos["_"][0],'y':body1.state.pos["_"][1]}, order: 0,
+    strength: .01}).applyTo([body1,body2]);
+	attractorbehaviorbodies.push(attractorbehavior2);
+	
+	//world.add(attractorbehavior2);
+			
+		}
+		
+		}catch(ex){}
+		
+		//	console.log(tempbodies[i].state.pos["_"][0]+" : "+tempbodies[i].state.pos["_"][1]);
+			
+		}
+		
+			
+		
+		
+	}
+	
+		
 
 			function getBodyAtMouse() {
+var body=world.findOne({ $at: Physics.vector(mouse.x, mouse.y) });
+console.log(body.width+" : "+body.height);
+				return body;
+			}
+			
+			function getNearestBodyAtMouse(x,y) {
+				
+			//	for(var j=mouse.x)
 
-				return world.findOne({ $at: Physics.vector(mouse.x, mouse.y) });
+				return world.findOne({ $at: Physics.vector(x, y) });
 			}
 
             function setWalls() {
@@ -485,17 +609,32 @@ $('#ex23').slider({
 
 			}else{
 speed=slideEvt.value;
-//world.timestep(timeStep+(speed/500));
-world.warp(.02*speed);
-//world.timestep(.02*speed);			
-//world.timestep(timeStep*speed);
 
-			//jQuery("#speed").val(slideEvt.value);
+//world.warp(speed*4);
 
 			}
+			
+world.timestep(timeStep+(speed/500));
+
+			
+			
 
 	
+}).on("slideStop",function(slideEvt){
+	
+	
+				if(!isPaused){
+			clearInterval(timerthread);
+		dance();
+timerthread=setInterval(dance, 3000-(speed*28));
+	}
+	
+	
+	
+	
 });
+
+
 
 $('#ex24').slider({
 	formatter: function(value) {
@@ -571,7 +710,7 @@ $(document).ready(function (){
         wordData = [];
         globalData = {};
   var maxwordcounts=10;
-			  var ismagnet=false;
+			$(".dance-btn").attr("magnet-status",false);
             $("#pauseplaybutton").removeClass("playstate");
 			$("#pauseplaybutton").attr("src","img/dancing/Pause.svg");
 			$("#pauseplaybutton").addClass("pausestate");
@@ -616,17 +755,7 @@ $(".inputkeyword").each(function(){
 	
 });		
 		
-		//synonyms.push({"id":$("#word1").attr("id"),"pattern":2,"words":[$("#word1").val().trim(),"how", "are","you"]});
-	   // synonyms.push({"id":$("#word2").attr("id"),"pattern":3,"words":[$("#word2").val().trim(),"apple", "orange","banana"]});
-		
 	
-	
-
-  
-  
- 
-		
-		
 		
 		if(synonyms.length<1){
 			
@@ -637,7 +766,7 @@ $(".inputkeyword").each(function(){
 		
 		
 		
-						$.post( "/synonym", { word1: jQuery("#word1").val(),word2: jQuery("#word2").val(),word3: jQuery("#word3").val(),word4: jQuery("#word4").val() })
+$.post( "/synonym", { word1: jQuery("#word1").val(),word2: jQuery("#word2").val(),word3: jQuery("#word3").val(),word4: jQuery("#word4").val() })
 	.done(function( data ) {
 
 //synonyms=data;
@@ -678,18 +807,46 @@ for(var j=0;j<synonyms.length;j++){
 		globalData={};
     
 		initworld();
-		timerthread= setInterval(dance, 4000);
+		dance();
+		timerthread= setInterval(dance, 3000-(speed*28));
         }else{
+			var magnet_status=($(thisbutton).attr("magnet-status") === 'true')
+			
+			magnet_status=!magnet_status;
+
+			$(thisbutton).attr("magnet-status",magnet_status);
+			
+			if(magnet_status){
+			
+				$(thisbutton).find("img").attr("src","img/dancing/DanceButtonIcon.png");
+			}else{
+				
+				$(thisbutton).find("img").attr("src","img/dancing/magnetPNG.png");
+			}
+			
+			/*
 		if(!ismagnet){
+			magnet_effect();
+			$(thisbutton).find("img").attr("src","img/dancing/DanceButtonIcon.png");
+			
 		   attractorbehavior=Physics.behavior('attractor',{  order: 0,
     strength: .05}).applyTo(bodies);
         attractorbehavior.position({'x':stage[2]/2,'y':stage[3]/2});
         world.add(attractorbehavior);
 		ismagnet=!ismagnet;
 		}else{
-		 world.remove(attractorbehavior);
+			$(thisbutton).find("img").attr("src","img/dancing/magnetPNG.png");
+			for(var k=0;k<attractorbehaviorbodies.length;k++){
+				
+				world.remove(attractorbehaviorbodies[k]);
+			}
+			
+		// world.remove(attractorbehavior);
 		 ismagnet=!ismagnet;
 		}
+		*/
+		
+		
 		}
 		
 		
@@ -712,6 +869,7 @@ for(var j=0;j<synonyms.length;j++){
 });
 
 function dance(){
+	if(createnewword){
 var synonymkind=Math.floor(Math.random()*synonyms.length);
 var choosesynonym=synonyms[synonymkind]["words"][Math.floor(Math.random()*synonyms[synonymkind]["words"].length)];
 
@@ -722,13 +880,18 @@ $("#dance-floor").append('<span style="" class="physics-element" id="physics-'+n
 		var offsets = $("#physics-"+nextid).offset();
 var top = offsets.top;
 var left = offsets.left;
-		console.log(offsets);
+		
 		
 		while(bodies.length>maxwordcounts){
 		world.remove(bodies[0]);
 		bodies.splice(0,1);
 		}
 			 create_physics_body(nextid);
+
            nextid++;
+		   
+
+		   
+	}
 
 }
