@@ -54,13 +54,13 @@ world.unpause();
 				window.addEventListener( 'deviceorientation', onWindowDeviceOrientation, false );
       window.addEventListener('blur', function() {
 
-	  createnewword=false;
+	  isPaused=true;
 
       }, true);
 	  
 	        window.addEventListener('focus', function() {
 
-	  createnewword=true;
+	  isPaused=false;
 
       }, true);
 	
@@ -873,7 +873,7 @@ for(var j=0;j<synonyms.length;j++){
 
 function dance(){
 	
-	if(createnewword){
+	if(!isPaused){
 		
 		console.log("hello");
 var synonymkind=Math.floor(Math.random()*synonyms.length);
