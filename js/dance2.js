@@ -206,6 +206,7 @@ world.on('step', function(){
 				
 				 
 			 }
+			 
 	
 	 if ( !world.isPaused() ){
 	                world.render();
@@ -432,7 +433,7 @@ world.on('step', function(){
 			
 			});
 			
-			console.log("After sorting:");
+		
 		
 			
 		
@@ -710,12 +711,14 @@ $(document).ready(function (){
         wordData = [];
         globalData = {};
   var maxwordcounts=10;
+  
 			$(".dance-btn").attr("magnet-status",false);
             $("#pauseplaybutton").removeClass("playstate");
 			$("#pauseplaybutton").attr("src","img/dancing/Pause.svg");
 			$("#pauseplaybutton").addClass("pausestate");
 			 $(".dance-btn").find("img").attr("src","img/dancing/DanceButtonIcon.png");
 			$("#pauseplaybutton").hide();
+			createnewword=false;
 			$(this).hide();
 		synonyms=[];
 		$("#dance-floor").html("").hide();
@@ -797,7 +800,7 @@ for(var j=0;j<synonyms.length;j++){
 		isPaused=false;
 		$("#pauseplaybutton").show();
 		$("#closeanimation").show();
-		
+		createnewword=true;
         $("#prompt").hide();
 		$("#dance-floor").show();
 		
@@ -869,7 +872,10 @@ for(var j=0;j<synonyms.length;j++){
 });
 
 function dance(){
+	
 	if(createnewword){
+		
+		console.log("hello");
 var synonymkind=Math.floor(Math.random()*synonyms.length);
 var choosesynonym=synonyms[synonymkind]["words"][Math.floor(Math.random()*synonyms[synonymkind]["words"].length)];
 
