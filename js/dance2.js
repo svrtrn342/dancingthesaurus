@@ -13,21 +13,45 @@
 			var isMouseDown = false;
 			var mouseJoint;
 			var mouse = { x: 0, y: 0 };
-			
+			var tilecolors=["#5c8afc","#3bc445","#ba77f5","#ff9933"];
 			var currentsecond=0;
-			var timerthread;
+			var timerthread=false;
 			var synonyms=[];
 			var nextid=0;
 			  var renderer;
 			 var step = 0, radius = 200, speed = 1;
               var isPaused=true;
 			  var maxwordcounts=10;
-			  
+			  var ismagnet=false;
 			  var createnewword=true;
 			  var attractorbehaviorbodies=[];
 $(document).ready(function(){
+	$(".inputkeyword").val("");
+
+
+	$("#dance-floor").height($( window ).height()-$("#dance-floor").offset().top-20);
+ $(".dance-btn").height($(".dance-btn").width());
+
+
+ 
  $("#dance-floor").css("width","100%");
-	   $("#dance-floor").css("height",$("#dance-floor").css("width"));
+ 
+  if( $("#dance-floor").width()< $("#dance-floor").height()){
+	 
+	  $("#dance-floor").height($("#dance-floor").width());
+ }
+
+ 
+ 
+  $('.panel-collapse').on('show.bs.collapse', function () {
+    $(this).siblings('.panel-heading').addClass('active');
+  });
+
+  $('.panel-collapse').on('hide.bs.collapse', function () {
+    $(this).siblings('.panel-heading').removeClass('active');
+  });
+
+	
 $("#pausebutton").click(function(){
 world.pause();
 
@@ -68,10 +92,17 @@ world.unpause();
 				
 
       window.addEventListener('resize', function() {
-	  $("#dance-floor").css("width","100%");
-	   $("#dance-floor").css("height",$("#dance-floor").css("width"));
+	//  $("#dance-floor").css("width","100%");
+	//   $("#dance-floor").css("height",$("#dance-floor").css("width"));
+$(".dance-btn").height($(".dance-btn").width());
+  			$("#dance-floor").height($( window ).height()-$("#dance-floor").offset().top-20);
 
-  				
+ $("#dance-floor").css("width","100%");		
+ 
+ if( $("#dance-floor").width()< $("#dance-floor").height()){
+	 
+	  $("#dance-floor").height($("#dance-floor").width());
+ }
 	   
       }, true);
 
@@ -98,6 +129,51 @@ world.unpause();
 
 
 });			
+
+    function magnet_effect(){
+		
+		
+					for(var k=0;k<attractorbehaviorbodies.length;k++){
+				
+				world.removeBehavior(attractorbehaviorbodies[k]);
+			}
+				 attractorbehaviorbodies=[];
+		
+try{
+var tempbodies=world.getBodies();
+	
+	var words1= tempbodies.filter(function(a){return a["wordtype"]==0;});
+	var words2= tempbodies.filter(function(a){return a["wordtype"]==1;});
+	var words3= tempbodies.filter(function(a){return a["wordtype"]==2;});
+	var words4= tempbodies.filter(function(a){return a["wordtype"]==3;});
+	
+
+	
+		var attractorbehavior1=Physics.behavior('attractor',{ pos:mouse, order: 0,
+    strength: 1}).applyTo(words1);
+	var attractorbehavior2=Physics.behavior('attractor',{ pos:mouse, order: 0,
+    strength: 1}).applyTo(words2);
+	var attractorbehavior3=Physics.behavior('attractor',{ pos:mouse, order: 0,
+    strength: 1}).applyTo(words3);
+	var attractorbehavior4=Physics.behavior('attractor',{ pos:mouse, order: 0,
+    strength:1}).applyTo(words4);
+	
+	
+	
+	attractorbehaviorbodies.push(attractorbehavior1);
+	attractorbehaviorbodies.push(attractorbehavior2);
+	attractorbehaviorbodies.push(attractorbehavior3);
+	attractorbehaviorbodies.push(attractorbehavior4);
+	
+	world.add(attractorbehaviorbodies[0]);
+	world.add(attractorbehaviorbodies[1]);
+	world.add(attractorbehaviorbodies[2]);
+	world.add(attractorbehaviorbodies[3]);
+		
+}catch(ex){console.log(ex);}
+
+		
+	}
 
 function initworld(){
 
@@ -144,37 +220,7 @@ world.add( Physics.behavior('body-collision-detection', { checkAll: true }) );
 				    world.add( Physics.behavior('interactive', { el: renderer.el }) );
 
 	  
-//	  world.add(bodies);
- 
 
-  
-
-  // ensure objects bounce when edge collision is detected
-// world.add( Physics.behavior('constant-acceleration') );
-  //  world.add( Physics.behavior('newtonian') );
-
-  /*
- attractorbehavior=Physics.behavior('attractor',{  order: 0,
-    strength: .005}).applyTo(bodies);
- 
-  world.on({
-    'interact:poke': function (pos) {
-      //  world.wakeUpAll();
-	  	   attractorbehavior=Physics.behavior('attractor',{  order: 0,
-    strength: .005}).applyTo(bodies);
-        attractorbehavior.position({'x':pos.x,'y':pos.y});
-        world.add(attractorbehavior);
-    }
-    , 'interact:move': function (pos) {
-        attractorbehavior.position({'x':pos.x,'y':pos.y});
-		
-    }
-    , 'interact:release': function () {
-       // this.wakeUpAll();
-        world.remove(attractorbehavior);
-    }
-});
-*/
 
 world.on('step', function(){
 	
@@ -183,29 +229,7 @@ world.on('step', function(){
 					setWalls();
                  }
     
-			   	if($(".dance-btn").attr("magnet-status")==='true'){
-				
-				
-				
-				magnet_effect();
-				
-			for(var k=0;k<attractorbehaviorbodies.length;k++){
-				
-				world.add(attractorbehaviorbodies[k]);
-			}
-				
-				//attractorbehaviorbodies=[];
-				 
-			 }else{
-				
-			for(var k=0;k<attractorbehaviorbodies.length;k++){
-				
-				world.removeBehavior(attractorbehaviorbodies[k]);
-			}
-				 attractorbehaviorbodies=[];
-				
-				 
-			 }
+
 			 
 	
 	 if ( !world.isPaused() ){
@@ -235,7 +259,7 @@ world.on('step', function(){
   
 }
 
-  			function create_physics_body(i){
+  			function create_physics_body(i,wordtype){
 			
 
 						
@@ -265,30 +289,46 @@ world.on('step', function(){
 
 	 
 	 
-	 /*
-	 		var word= Physics.body('convex-polygon', {
-						x: stage[2]/2,//properties[i][0] + properties[i][2]/2,
-						y:0,// properties[i][1] + properties[i][3]/2,
-						vx:1,
-						vy:1,
-						vertices: [
-							{ x: 0, y: 0 },
-							{ x: properties[i][2], y: 0 },
-							{ x: properties[i][2], y: properties[i][3] },
-							{ x: 0, y: properties[i][3] }
-						]
-					});
-				*/	
+					var xposition=stage[2]/1.5;
+				var yposition=0;
+				var xdirection=1;
+				var ydirection=1;
+				if(wordtype==0){
+					xposition=stage[2]/1.5;
+					yposition=0;
+					xdirection=1;
+					ydirection=1;
+				}if(wordtype==1){
+					xposition=stage[2];
+					yposition=stage[3]/1.5;
+					xdirection=-1;
+					ydirection=1;
+				}
+                else if(wordtype==2){
+					xposition=stage[2]/1.5;
+					yposition=stage[3];
+					xdirection=-1;
+					ydirection=-1;
+				}else if(wordtype==3){
+					xposition=0;
+					yposition=stage[3]/1.5;
+					xdirection=1;
+					ydirection=-1;
+				}   
+ 				
+				
 					
 						var word= Physics.body('rectangle', {
-						x: stage[2]/2,//properties[i][0] + properties[i][2]/2,
-						y:0,// properties[i][1] + properties[i][3]/2,
-						vx:1,
-						vy:1,
+						x: xposition,//properties[i][0] + properties[i][2]/2,
+						y:yposition,// properties[i][1] + properties[i][3]/2,
+						vx:xdirection,
+						vy:ydirection,
+						"wordtype":wordtype,
 						width: properties[i][2],
 						height: properties[i][3] 
 						
 					});
+					
 					
 
 					
@@ -330,6 +370,17 @@ world.on('step', function(){
 
 				mouse.x = event.clientX;
 				mouse.y = event.clientY;
+				
+								if(ismagnet){
+					try{
+						for(var i=0;i<attractorbehaviorbodies.length;i++){
+							
+		attractorbehaviorbodies[i].position(mouse);
+		
+	}
+					}catch(ex){}
+					
+				}
 
 			}
 			function onDocumentKeyUp( event ) {
@@ -357,6 +408,19 @@ world.on('step', function(){
 
 					mouse.x = event.touches[0].pageX;
 					mouse.y = event.touches[0].pageY;
+					
+					
+									if(ismagnet){
+					try{
+						for(var i=0;i<attractorbehaviorbodies.length;i++){
+							
+		attractorbehaviorbodies[i].position(mouse);
+		
+	}
+					}catch(ex){}
+					
+				}
+					
 
 				}
 
@@ -413,57 +477,7 @@ world.on('step', function(){
 			
 			
 
-    function magnet_effect(){
-		
-		var xbodies=[];
-		var ybodies=[];
-		
-		
-		
-		var tempbodies=world.getBodies();
-		
-	
-		tempbodies.sort(function(body1,body2){
-			
-			var distance1=Math.sqrt(Math.pow(body1.state.pos["_"][0],2)+Math.pow(body1.state.pos["_"][1],2));
-			var distance2=Math.sqrt(Math.pow(body2.state.pos["_"][0],2)+Math.pow(body2.state.pos["_"][1],2));
-			
-			return distance1-distance2;
-			
-			
-			});
-			
-		
-		
-			
-		
-		for(var i=tempbodies.length-1;i>=0;i-=2){
-		var body1= tempbodies[i];
-		
-		try{
-		var body2=	getNearestBodyAtMouse(tempbodies[i-1].state.pos["_"][0],tempbodies[i-1].state.pos["_"][1]);
-		if(body2){
-			
-				var attractorbehavior2=Physics.behavior('attractor',{ pos:{'x':body1.state.pos["_"][0],'y':body1.state.pos["_"][1]}, order: 0,
-    strength: .01}).applyTo([body1,body2]);
-	attractorbehaviorbodies.push(attractorbehavior2);
-	
-	//world.add(attractorbehavior2);
-			
-		}
-		
-		}catch(ex){}
-		
-		//	console.log(tempbodies[i].state.pos["_"][0]+" : "+tempbodies[i].state.pos["_"][1]);
-			
-		}
-		
-			
-		
-		
-	}
-	
-		
+
 
 			function getBodyAtMouse() {
 var body=world.findOne({ $at: Physics.vector(mouse.x, mouse.y) });
@@ -611,13 +625,13 @@ $('#ex23').slider({
 			}else{
 speed=slideEvt.value;
 
-//world.warp(speed*4);
 
-			}
-			
+
+}
+	try{	
 world.timestep(timeStep+(speed/500));
 
-			
+	}catch(ex){}	
 			
 
 	
@@ -625,9 +639,11 @@ world.timestep(timeStep+(speed/500));
 	
 	
 				if(!isPaused){
+					try{
 			clearInterval(timerthread);
 		dance();
 timerthread=setInterval(dance, 3000-(speed*28));
+					}catch(ex){}
 	}
 	
 	
@@ -676,14 +692,56 @@ $(this).parent().find(".no-display").hide();
 });
 
 
-});
 
+$(".inputkeyword").blur(function(){
+	
+	if(synonyms.length<1){
+		$(".dance-btn").hide();
+		$(".synonymsstatus").show();
+		
+	}
+	
+	$.post( "/synonym", { word1: jQuery("#word1").val(),word2: jQuery("#word2").val(),word3: jQuery("#word3").val(),word4: jQuery("#word4").val() })
+	.done(function( data ) {
 
-$(document).ready(function (){
+synonyms=[];
+
+for(var j=0;j<4;j++){
+	var synonymid="word"+(j+1);
+	if(data[synonymid+"_synonyms"][1].length>0){
+	synonyms.push({"id":$("#word"+(j+1)).attr("id"),"pattern":1,"serial":0,"words":[$("#word"+(j+1)).val()].concat(data[synonymid+"_synonyms"][1])});	
+	$("#word"+(j+1)).css("border","none");
+//	synonyms[j]["words"]=synonyms[j]["words"].concat(data[synonymid+"_synonyms"][1]);
+}else{
+	
+		
+			if($("#word"+(j+1)).val()!=""){
+			$("#word"+(j+1)).css("border","1px solid red");
+			}
+	
+	
+}
+
+}
+console.log(synonyms);
+
+		$(".synonymsstatus").hide();
+        $(".dance-btn").show();
+
+	}).fail(function(){
+		
+			$(".synonymsstatus").hide();
+        $(".dance-btn").show();
+	});
+	
+	
+});	
+	
 	$("#pauseplaybutton").click(function(){
 		
 		if($(this).hasClass("pausestate")){
 		world.pause();
+		//world.warp(.001);
 			isPaused=true;
 			$(this).removeClass("pausestate");
 			$(this).attr("src","img/dancing/Play.svg");
@@ -706,7 +764,7 @@ $(document).ready(function (){
 		world.destroy();
 		
 		clearInterval(timerthread);
-		
+		timerthread=false;
 		//nextId = 0;
         wordData = [];
         globalData = {};
@@ -716,12 +774,12 @@ $(document).ready(function (){
             $("#pauseplaybutton").removeClass("playstate");
 			$("#pauseplaybutton").attr("src","img/dancing/Pause.svg");
 			$("#pauseplaybutton").addClass("pausestate");
-			 $(".dance-btn").find("img").attr("src","img/dancing/DanceButtonIcon.png");
+			 $(".dance-btn").find("img").attr("src","img/dancing/DanceButtonIcon.png").css("margin","0 0 0 5%");;
 			$("#pauseplaybutton").hide();
 			createnewword=false;
 			$(this).hide();
-		synonyms=[];
-		$("#dance-floor").html("").hide();
+		
+		$("#dance-floor").html("");
 		$("#prompt").show();
 		$("#word-entry").show();
 		$("#word1").css("border","");
@@ -730,70 +788,82 @@ $(document).ready(function (){
 	
     $(".dance-btn").click(function (){
 
+
+	
 var thisbutton=this;
         
 
-       
-$(".inputkeyword").each(function(){
 	
-	if($(this).val().trim()!=""){
 		
-		var pattern=Number($(this).next().find(".selected-display").attr("data-pattern"));
+	
 		
-		//var pattern=Number($(this).attr("id").replace("word","").trim());
-		if(pattern==4){
-			
-			pattern=2;
-		}
-		if(pattern==1){
-			
-			pattern=3;
-		}
-		
-			synonyms.push({"id":$(this).attr("id"),"pattern":pattern,"words":[$(this).val()]});
 
 		
-	}
-	
-	
-});		
 		
-	
+					if($("#word1").val().trim()=="" && $("#word2").val().trim()=="" && $("#word3").val().trim()=="" && $("#word4").val().trim()==""){
 		
-		if(synonyms.length<1){
-			
 			$("#word1").css("border","1px solid red");
 			return;
 		}
 		
-		
-		
-		
-$.post( "/synonym", { word1: jQuery("#word1").val(),word2: jQuery("#word2").val(),word3: jQuery("#word3").val(),word4: jQuery("#word4").val() })
-	.done(function( data ) {
 
-//synonyms=data;
-
-//console.log(data);
-
-
-for(var j=0;j<synonyms.length;j++){
-	
-	synonyms[j]["words"]=synonyms[j]["words"].concat(data[synonyms[j]["id"]+"_synonyms"][1]);
-	
-	
-}
 
 
 
  
 		
-		if(isPaused){
+		if(!timerthread){
+			
+			
+	$.post( "/synonym", { word1: jQuery("#word1").val(),word2: jQuery("#word2").val(),word3: jQuery("#word3").val(),word4: jQuery("#word4").val() })
+	.done(function( data ) {
+
+synonyms=[];
+
+
+
+for(var j=0;j<4;j++){
+	var synonymid="word"+(j+1);
+	if(data[synonymid+"_synonyms"][1].length>0){
+	synonyms.push({"id":$("#word"+(j+1)).attr("id"),"pattern":1,"serial":0,"words":[$("#word"+(j+1)).val()].concat(data[synonymid+"_synonyms"][1])});	
+	$("#word"+(j+1)).css("border","none");
+//	synonyms[j]["words"]=synonyms[j]["words"].concat(data[synonymid+"_synonyms"][1]);
+}else{
+	
+		
+			if($("#word"+(j+1)).val()!=""){
+			$("#word"+(j+1)).css("border","1px solid red");
+			}
+	
+	
+}
+
+}
+console.log(synonyms);
+
+		$(".synonymsstatus").hide();
+        $(".dance-btn").show();			
+			
+			
+			
+			
+
+
+	if(synonyms.length<1){
+		
+alert("No synonyms are available. Please update words");
+return;
+		
+	}
+
+	initworld();
+			
+			
 		 $("#pauseplaybutton").removeClass("playstate");
 	    $("#pauseplaybutton").attr("src","img/dancing/Pause.svg");
 		$("#pauseplaybutton").addClass("pausestate");
-		$(thisbutton).find("img").attr("src","img/dancing/magnetPNG.png");
-		nextId = 0;
+		$(thisbutton).find("img").attr("src","img/dancing/magnetPNG.png").css("margin","8% 0 0 5%");;
+		//nextId = 0;
 		$("#word1").css("border","");
 		//$("#word-entry").hide();
 	//	clearInterval(timerthread);
@@ -809,45 +879,61 @@ for(var j=0;j<synonyms.length;j++){
         wordData = [];
 		globalData={};
     
-		initworld();
+		
 		dance();
 		timerthread= setInterval(dance, 3000-(speed*28));
+		
+		
+		
+		
+
+		
+		
+	}).fail(function(){
+		$(".synonymsstatus").hide();
+        $(".dance-btn").show();	
+		
+		
+	});
+		
+		
+		
+		
         }else{
 			var magnet_status=($(thisbutton).attr("magnet-status") === 'true')
 			
 			magnet_status=!magnet_status;
+			ismagnet=magnet_status;
 
 			$(thisbutton).attr("magnet-status",magnet_status);
 			
 			if(magnet_status){
 			
-				$(thisbutton).find("img").attr("src","img/dancing/DanceButtonIcon.png");
+				$(thisbutton).find("img").attr("src","img/dancing/DanceButtonIcon.png").css("margin","0 0 0 5%");
 			}else{
 				
-				$(thisbutton).find("img").attr("src","img/dancing/magnetPNG.png");
+				$(thisbutton).find("img").attr("src","img/dancing/magnetPNG.png").css("margin","8% 0 0 5%");
 			}
 			
-			/*
-		if(!ismagnet){
-			magnet_effect();
-			$(thisbutton).find("img").attr("src","img/dancing/DanceButtonIcon.png");
 			
-		   attractorbehavior=Physics.behavior('attractor',{  order: 0,
-    strength: .05}).applyTo(bodies);
-        attractorbehavior.position({'x':stage[2]/2,'y':stage[3]/2});
-        world.add(attractorbehavior);
-		ismagnet=!ismagnet;
-		}else{
-			$(thisbutton).find("img").attr("src","img/dancing/magnetPNG.png");
-			for(var k=0;k<attractorbehaviorbodies.length;k++){
+					if(ismagnet){
+				$(".nomagnetcontainer").removeClass("nomagnetcontainer").addClass("magnetcontainer");
+				magnet_effect();
 				
-				world.remove(attractorbehaviorbodies[k]);
+				
+			}else {
+			$(".magnetcontainer").removeClass("magnetcontainer").addClass("nomagnetcontainer");
+		
+  		for(var k=0;k<attractorbehaviorbodies.length;k++){
+				try{
+				world.removeBehavior(attractorbehaviorbodies[k]);
+				}catch(ex){}
+			}
+				 attractorbehaviorbodies=[];
 			}
 			
-		// world.remove(attractorbehavior);
-		 ismagnet=!ismagnet;
-		}
-		*/
+			
+
 		
 		
 		}
@@ -857,11 +943,7 @@ for(var j=0;j<synonyms.length;j++){
 
 
 
-         
-       // }
-    }).fail(function() {
-    alert( "Error getting synonyms" );
-  });
+      
 		
 });
 
@@ -874,13 +956,27 @@ for(var j=0;j<synonyms.length;j++){
 function dance(){
 	
 	if(!isPaused){
-		
-		console.log("hello");
-var synonymkind=Math.floor(Math.random()*synonyms.length);
-var choosesynonym=synonyms[synonymkind]["words"][Math.floor(Math.random()*synonyms[synonymkind]["words"].length)];
+			try{	
+				var synonymkind=parseInt(Math.random()*synonyms.length);
+//var choosesynonym=synonyms[synonymkind]["words"][parseInt(Math.random()*synonyms[synonymkind]["words"].length)];
 
-$("#dance-floor").append('<span style="" class="physics-element" id="physics-'+nextid+'">&nbsp;'+choosesynonym+'&nbsp;</span>');
+
+var choosesynonym=synonyms[synonymkind]["words"][synonyms[synonymkind]["serial"]++];
+console.log(choosesynonym);
+
         
+
+		
+		
+		while(bodies.length>maxwordcounts){
+		world.remove(bodies[0]);
+		bodies.splice(0,1);
+		}
+		
+
+
+if(choosesynonym!=null){
+$("#dance-floor").append('<span style="background-color:'+tilecolors[synonymkind]+'" class="physics-element" id="physics-'+nextid+'">&nbsp;'+choosesynonym+'&nbsp;</span>');
 		var element=document.getElementById("physics-"+nextid);
 		
 		var offsets = $("#physics-"+nextid).offset();
@@ -888,15 +984,20 @@ var top = offsets.top;
 var left = offsets.left;
 		
 		
-		while(bodies.length>maxwordcounts){
-		world.remove(bodies[0]);
-		bodies.splice(0,1);
-		}
-			 create_physics_body(nextid);
+			 create_physics_body(nextid,synonymkind);
 
            nextid++;
+		 //  console.log("next id: "+nextid);
+}
 		   
 
+		    if(ismagnet){
+				// console.log("magnet----------");
+						 magnet_effect();
+						 
+					 }  
+		   
+	}catch(ex){console.log(ex);console.log(synonyms);}
 		   
 	}
 

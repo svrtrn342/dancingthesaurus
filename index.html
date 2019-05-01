@@ -7,7 +7,10 @@
     <title>Dancing Thesaurus</title>
 
     <!-- CSS  -->
-	<link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
+	<!--<link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">-->
+	<!--<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css" rel="stylesheet">-->
+	<!--<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" rel="stylesheet">-->
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link href="min/plugin-min.css" type="text/css" rel="stylesheet">
     <link href="min/custom-min.css" type="text/css" rel="stylesheet" >
     <link href="css/palette.css" type="text/css" rel="stylesheet" >
@@ -15,7 +18,9 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	
 
-  <script src="js/bootstrap.min.js"></script>
+<!--  <script src="js/bootstrap.min.js"></script>-->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>-->
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
  <!-- <script src="physicsjs6/js/physicsjs-full-0.6.0.js"></script>-->
 <script src="physicsjs7/js/physicsjs-full.js"></script>
       <script type="text/javascript" src="js/bootstrap-slider.js"></script>
@@ -68,9 +73,71 @@ background-color: #718ddf ;
 }
 .physics-element{
 background-color: #5c8afc ;
+
+
 color:white;
 font-weight:bolder;
 }
+
+.magnetcontainer {
+
+ cursor:url(http://localhost:4040/img/dancing/cursor2.cur), auto;
+}
+
+.nomagnetcontainer {
+
+ cursor:pointer;
+}
+
+input{
+cursor:pointer;
+}
+
+#closeanimation{
+cursor:pointer;display:none;max-width:80%;max-height:80%;margin-top:50%;
+}
+
+.dance-btn img{
+max-width:90%;max-height:90%;margin-top:5%
+}
+
+#pauseplaybutton{
+cursor:pointer;display:none;max-width:80%;max-height:80%;margin-top:50%
+}
+
+#prompt{
+color:#2196F3;font-size:4em;
+
+}
+#prompt span{
+position:absolute;
+top:35%;
+left:10%;
+right:10%;
+
+}
+.panel-title>a, .panel-title>a:active{
+	display:block;
+	padding:15px;
+  color:#555;
+  font-size:16px;
+  font-weight:bold;
+	text-transform:uppercase;
+	letter-spacing:1px;
+  word-spacing:3px;
+	text-decoration:none;
+}
+.panel-heading  a:before {
+   font-family: 'Glyphicons Halflings';
+   content: "\e114";
+   float: right;
+   transition: all 0.5s;
+}
+.panel-heading.active a:before {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
+} 
   
   </style>
   
@@ -78,9 +145,17 @@ font-weight:bolder;
   
   <style>
   
-    @media screen and (min-width: 300px) {
+    @media screen and (max-width: 300px) {
 	
-	  .first-slider{margin-bottom:30px;}
+
+	.toolcontainer img{
+	margin:0px;
+	
+	}
+	.dance-btn{
+	
+	}
+	  .first-slider{}
  .keywordinput .col-md-3{
 
  float:left;
@@ -114,7 +189,46 @@ font-weight:bolder;
  
 }
   
-  @media screen and (min-width: 600px) {
+  @media screen and (max-width: 600px) {
+    .toolcontainer .col-md-3{
+  height:100px;
+  width:24%;
+  float:right
+  }
+  .toolcontainer .col-md-3:first-child{
+
+  float:left
+  }
+    .toolcontainer .col-md-6{
+  float:left;
+  width:48%;
+  }
+  
+  /*
+  	#pauseplaybutton{
+	margin-top:10%;
+	max-width:50%;
+	max-height:50%;
+	}
+	#closeanimation{
+	margin-top:10%;
+	max-width:50%;
+	max-height:50%;
+	}
+  .dance-btn{
+  width:50%;
+  margin:0 auto;
+  
+  }
+*/
+  
+  
+#prompt{
+font-size:2em
+}
+  
+  
+  
  .keywordinput .col-md-3{
  float:left;
  width:25%;
@@ -188,20 +302,20 @@ font-weight:bolder;
 
 <div class="section scrollspy" id="dance"  style=" margin-top: 0 !important;">
 <div class="section no-pad-bot" id="index-banner"  style="min-height:auto;max-height:none;margin-top: 0 !important;">
-<div class="container" style="width:90%;height: auto;margin-bottom:20px">
+<div class="container nomagnetcontainer" style="width:90%;height: auto;margin-bottom:20px">
 <div class="row">
-<div class="col-sm-8">
+<div class="col-sm-8" style="padding:0px">
 
-        <h2 class="text_h center header cd-headline letters type" id="prompt" style="">
-            <span></span> 
+      
+
+		        <div id="dance-floor" onmouseenter="" style="margin 0 auto;width:100%;height:inherit;background:white;">
+				  <h2 class="text_h center header cd-headline letters type" id="prompt" style="">
+            
             <span class="cd-words-wrapper waiting">
-                <b class="is-visible">Just type in keywords...</b>
-                <b>Get some inspiration!</b>
-                <b>Watch synonyms dance!</b>
+                <b class="is-visible">Just enter keywords!</b><br /><b class="is-visible">Be inspired!</b>
+              
             </span>
         </h2>
-
-		        <div id="dance-floor" style="margin 0 auto;width:100%;height:inherit;background:white;display:none">
 
 		</div>
 		
@@ -213,80 +327,55 @@ font-weight:bolder;
   
 </div>
 	
-<div class="col-sm-4">
+<div class="col-sm-4 leftsidecontrol" onmouse="">
 <div class="section no-pad-bot" id="word-entry">
 <div class="container">
-<div class="row keywordinput">
-<div class="col-md-12"><input id="word1" type="text" style="width:60%;float:left" class="inputkeyword" name="word1" id="word1" value="" placeholder="Keyword 1" />
-<!--
-<div class="motionselection">
-<div class="selected-display" data-pattern="1">
-<img src="img/dancing/infinity.svg"   />
-</div>
-<div class="no-display" data-pattern="2">
-<img src="img/dancing/movement.svg"   />
-</div>
-<div class="no-display" data-pattern="3">
-<img src="img/dancing/ZigZagAcross.svg"  />
-</div>
 
-</div>-->
+
+    <div class="panel-heading active" role="tab" id="headingOne" style="padding:0">
+	  <h3 class="panel-title">
+        <a role="button" data-toggle="collapse"  href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="padding:0;margin:0;color:white;margin-bottom:10px">
+          Hide input panel
+        </a>
+      </h3>
+	
+	</div>
+
+<div class="row keywordinput panel-collapse collapse in" id="collapseOne" class="" role="tabpanel" aria-labelledby="headingOne">
+
+
+<div class="col-md-12"><input id="word1" type="text" style="width:60%;float:left" class="inputkeyword" name="word1" id="word1" value="" placeholder="Keyword 1" />
+
 
 </div>
 <div class="col-md-12"><input id="word2" type="text" style="width:60%;float:left" class="inputkeyword" name="word2" id="word2" value="" placeholder="Keyword 2" />
-<!--
-<div class="motionselection">
-<div class="selected-display" data-pattern="1">
-<img src="img/dancing/infinity.svg"   />
-</div>
-<div class="no-display" data-pattern="2">
-<img src="img/dancing/movement.svg"   />
-</div>
-<div class="no-display" data-pattern="3">
-<img src="img/dancing/ZigZagAcross.svg"  />
-</div>
-</div>-->
+
 </div>
 <div class="col-md-12"><input id="word3" type="text" style="width:60%;float:left" class="inputkeyword" name="word3" id="word3" placeholder="Keyword 3" />
-<!--
-<div class="motionselection">
-<div class="selected-display" data-pattern="1">
-<img src="img/dancing/infinity.svg"   />
-</div>
-<div class="no-display" data-pattern="2">
-<img src="img/dancing/movement.svg"   />
-</div>
-<div class="no-display" data-pattern="3">
-<img src="img/dancing/ZigZagAcross.svg"  />
-</div>
-</div>-->
+
 </div>
 <div class="col-md-12"><input id="word4" type="text" style="width:60%;float:left"class="inputkeyword" name="word4" id="word4" placeholder="Keyword 4" />
-<!--
-<div class="motionselection">
-<div class="selected-display" data-pattern="1">
-<img src="img/dancing/infinity.svg"   />
-</div>
-<div class="no-display" data-pattern="2">
-<img src="img/dancing/movement.svg"   />
-</div>
-<div class="no-display" data-pattern="3">
-<img src="img/dancing/ZigZagAcross.svg"  />
-</div>
-</div>-->
+
 </div>
 </div>
 
 
+
+  
+
+</div>
 </div>
 
-</div>	
+
+
+
+
 
 
 
 <div class="container">
 <div class="row">
-<div class="col-md-12 first-slider" style="text-align:center">
+<div class="col-md-12 first-slider" style="text-align:center;cursor:pointer">
 
 
 	<div style="text-align:center">
@@ -295,7 +384,7 @@ font-weight:bolder;
 		<span  style="color:white;font-weight:bold">Speed</span>
 	</div>
 
-	<input id="ex23" style="width:100%;height:5px" type="text" data-slider-id='ex25Slider' type="text" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="1"/>
+	<input id="ex23" style="width:100%;height:5px" type="text" data-slider-id='ex23Slider' type="text" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="1"/>
 	
 
 
@@ -306,25 +395,31 @@ font-weight:bolder;
 
 
 
-<div class="row toolcontainer">
+<div class="row toolcontainer" style="margin:0">
 
-<div class="col-md-2">
+<div class="col-md-3" style="padding:0;text-align:center">
 
-<img src="img/dancing/XinCircle.svg" id="closeanimation"  style="margin-top:30px;cursor:pointer;display:none;width:45px;height:45px" />
+<img src="img/dancing/XinCircle.svg" id="closeanimation"  style="" />
 </div>
 
-<div class="col-md-8">
-
+<div class="col-md-6" style="padding:0">
+<!--
 <p align="center">
-
-<a class="waves-effect waves-light btn-large dance-btn" style="background-color: #6550c1;width:100px;height:100px;border-radius:50%" magnet-status="false"><img style="width:70px;height:70px;margin-top: 1.1em;margin-left: -1em;" src="img/dancing/DanceButtonIcon.png"  /></a>
+<label class="synonymsstatus" style="display:none">Getting synonyms. Please wait...</label>
+<a class="waves-effect waves-light btn-large dance-btn"  style="cursor:inherit;background-color: #6550c1;width:100px;height:100px;border-radius:50%" magnet-status="false"><img style="width:70px;height:70px;margin-top: 1.1em;margin-left: -1em;" src="img/dancing/DanceButtonIcon.png"  /></a>
 </p>
+-->
+<label class="synonymsstatus" style="display:none">Getting synonyms. Please wait...</label>
+<div class="dance-btn" style="background-color: #6550c1;padding:10px;border-radius:50%" magnet-status="false">
+<img src="img/dancing/DanceButtonIcon.png"   style="" />
+</div>
+
 </div>
 
 
-<div class="col-md-2">
+<div class="col-md-3" style="padding:0;text-align:center">
 
-<img src="img/dancing/Pause.svg" id="pauseplaybutton" class="pausestate"  style="margin-top:30px;cursor:pointer;display:none;width:45px;height:45px" />
+<img src="img/dancing/Pause.svg" id="pauseplaybutton" class="pausestate"  style="" />
 </div>
 
 
@@ -333,7 +428,7 @@ font-weight:bolder;
 
 </div>
 
-<div class="col-md-12" style="text-align:center">
+<div class="col-md-12" style="margin-top:30px;text-align:center;cursor:pointer">
 
 
 	<div style="text-align:center">
@@ -632,7 +727,6 @@ font-weight:bolder;
     <script src="min/custom-min.js"></script>
    <script src="js/dance2.js"></script>
    
-
 
 
     </body>
