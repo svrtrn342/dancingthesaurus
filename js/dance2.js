@@ -19,6 +19,7 @@
 			var synonyms=[];
 			var nextid=0;
 			  var renderer;
+			  var maxquantity=70;
 			 var step = 0, radius = 200, speed = 1;
               var isPaused=true;
 			  var maxwordcounts=10;
@@ -27,7 +28,10 @@
 			  var attractorbehaviorbodies=[];
 $(document).ready(function(){
 	$(".inputkeyword").val("");
-
+if($(window).width()<600){
+	
+	maxquantity=20;
+}
 
 	$("#dance-floor").height($( window ).height()-$("#dance-floor").offset().top-20);
  $(".dance-btn").height($(".dance-btn").width());
@@ -97,6 +101,8 @@ world.unpause();
 				
 
       window.addEventListener('resize', function() {
+		  
+		  if($(window).height()<=800){
 	//  $("#dance-floor").css("width","100%");
 	//   $("#dance-floor").css("height",$("#dance-floor").css("width"));
 $(".dance-btn").height($(".dance-btn").width());
@@ -108,6 +114,7 @@ $(".dance-btn").height($(".dance-btn").width());
 	 
 	  $("#dance-floor").height($("#dance-floor").width());
  }
+		  }
 	   
       }, true);
 
@@ -659,6 +666,7 @@ timerthread=setInterval(dance, 3000-(speed*28));
 
 
 $('#ex24').slider({
+	max:maxquantity,
 	formatter: function(value) {
 		return value ;
 		
@@ -700,6 +708,8 @@ $(this).parent().find(".no-display").hide();
 
 $(".inputkeyword").blur(function(){
 	
+	
+	
 	if(synonyms.length<1){
 		$(".dance-btn").hide();
 		$(".synonymsstatus").show();
@@ -715,14 +725,21 @@ for(var j=0;j<4;j++){
 	var synonymid="word"+(j+1);
 	if(data[synonymid+"_synonyms"][1].length>0){
 	synonyms.push({"id":$("#word"+(j+1)).attr("id"),"pattern":1,"serial":0,"words":[$("#word"+(j+1)).val()].concat(data[synonymid+"_synonyms"][1])});	
-	$("#word"+(j+1)).css("border","none");
+
+			
+			$("#word"+(j+1)).next().hide();//.css("border","1px solid red");
+			
+	
 //	synonyms[j]["words"]=synonyms[j]["words"].concat(data[synonymid+"_synonyms"][1]);
 }else{
 	
 		
 			if($("#word"+(j+1)).val()!=""){
-			$("#word"+(j+1)).css("border","1px solid red");
+			$("#word"+(j+1)).next().show();//.css("border","1px solid red");
+			}else{
+			$("#word"+(j+1)).next().hide();//.css("border","1px solid red");
 			}
+			
 	
 	
 }
@@ -765,6 +782,7 @@ console.log(synonyms);
 	
 	$("#closeanimation").click(function(){
 		$(".panel-collapse").collapse("show");
+		$(".error").hide();
 		isPaused=true;
 		world.destroy();
 		
@@ -792,10 +810,15 @@ console.log(synonyms);
 	});
 	
 	$(".inputkeyword").click(function(){
-		if($( window ).width()<600)
-		 $('html, body').animate({
-        scrollTop: $(this).offset().top -50
+		
+		if($(window).height()<600){
+			
+			  $('html, body').animate({
+        scrollTop: $(this).offset().top-50
     }, 500);
+		}
+		
+
 		
 		
 	});
@@ -842,14 +865,22 @@ for(var j=0;j<4;j++){
 	var synonymid="word"+(j+1);
 	if(data[synonymid+"_synonyms"][1].length>0){
 	synonyms.push({"id":$("#word"+(j+1)).attr("id"),"pattern":1,"serial":0,"words":[$("#word"+(j+1)).val()].concat(data[synonymid+"_synonyms"][1])});	
-	$("#word"+(j+1)).css("border","none");
-//	synonyms[j]["words"]=synonyms[j]["words"].concat(data[synonymid+"_synonyms"][1]);
+
+				if($("#word"+(j+1)).val()!=""){
+			$("#word"+(j+1)).next().show();//.css("border","1px solid red");
+			}else{
+			$("#word"+(j+1)).next().hide();//.css("border","1px solid red");
+			}
+	
 }else{
 	
 		
-			if($("#word"+(j+1)).val()!=""){
-			$("#word"+(j+1)).css("border","1px solid red");
+				if($("#word"+(j+1)).val()!=""){
+			$("#word"+(j+1)).next().show();//.css("border","1px solid red");
+			}else{
+			$("#word"+(j+1)).next().hide();//.css("border","1px solid red");
 			}
+			
 	
 	
 }
