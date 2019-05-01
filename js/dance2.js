@@ -44,13 +44,18 @@ $(document).ready(function(){
  
  
   $('.panel-collapse').on('show.bs.collapse', function () {
-    $(this).siblings('.panel-heading').addClass('active');
+    $(this).siblings('.panel-heading').addClass('active').find("a");
+	$("#headingOne").find('a').text("Hide Input Panel");
+	
   });
 
   $('.panel-collapse').on('hide.bs.collapse', function () {
     $(this).siblings('.panel-heading').removeClass('active');
+	 $("#headingOne").find('a').text("Show Input Panel");
   });
 
+
+  
 	
 $("#pausebutton").click(function(){
 world.pause();
@@ -759,7 +764,7 @@ console.log(synonyms);
 	});
 	
 	$("#closeanimation").click(function(){
-		
+		$(".panel-collapse").collapse("show");
 		isPaused=true;
 		world.destroy();
 		
@@ -786,9 +791,20 @@ console.log(synonyms);
 		
 	});
 	
+	$(".inputkeyword").click(function(){
+		if($( window ).width()<600)
+		 $('html, body').animate({
+        scrollTop: $(this).offset().top -50
+    }, 500);
+		
+		
+	});
+	
     $(".dance-btn").click(function (){
 
-
+  $('html, body').animate({
+        scrollTop: $("#dance-floor").offset().top-100
+    }, 500);
 	
 var thisbutton=this;
         
@@ -858,15 +874,14 @@ return;
 
 	initworld();
 			
-			
+		$(".panel-collapse").collapse("hide");
 		 $("#pauseplaybutton").removeClass("playstate");
 	    $("#pauseplaybutton").attr("src","img/dancing/Pause.svg");
 		$("#pauseplaybutton").addClass("pausestate");
 		$(thisbutton).find("img").attr("src","img/dancing/magnetPNG.png").css("margin","8% 0 0 5%");;
 		//nextId = 0;
 		$("#word1").css("border","");
-		//$("#word-entry").hide();
-	//	clearInterval(timerthread);
+
 		isPaused=false;
 		$("#pauseplaybutton").show();
 		$("#closeanimation").show();
